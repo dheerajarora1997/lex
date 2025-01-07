@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import "./modaloverwrite.scss";
+import "./modalOverwrite.scss";
 
 export default function ModalDilogGroup() {
   const [iframeOpen, setIframeOpen] = useState(false);

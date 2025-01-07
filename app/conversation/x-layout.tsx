@@ -7,6 +7,7 @@ import styles from "./styles/conversationLayout.module.scss";
 
 function ConversationLayout() {
   const { isSidebarOpen } = useAppSelector((state) => state.conversationData);
+  console.log(isSidebarOpen);
 
   return (
     <div className={styles.chatLayout}>
