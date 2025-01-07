@@ -9,6 +9,6 @@ export function ReduxProvider({
   pageProps?: object;
 }) {
   //   const { store } = wrapper.useWrappedStore({ pageProps });
-
+  console.log(pageProps);
   return <Provider store={store}>{children}</Provider>;
 }
