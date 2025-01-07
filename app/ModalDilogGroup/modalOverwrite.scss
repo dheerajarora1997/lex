@@ -1,0 +1,60 @@
+@import "../styles/abstracts/variable";
+
+.modal.custom-slide-modal {
+  align-items: flex-start;
+  justify-content: flex-end;
+  height: 100vh;
+  overflow: hidden;
+  .modal-dialog {
+    width: 500px;
+    height: 100%;
+    margin: 0;
+    transform: translateX(100%);
+    transition: transform 0.4s ease-in-out;
+  }
+  .modal-content {
+    height: 100%;
+    border-radius: 0;
+  }
+  &.show {
+    display: flex !important;
+    .modal-dialog {
+      transform: translateX(0);
+    }
+  }
+  .modal-left-element,
+  .modal-right-element {
+    width: 100%;
+    max-width: 525px;
+    height: calc(100vh - 65px);
+    overflow: hidden;
+    overflow-y: auto;
+    iframe {
+      width: 100%;
+      min-height: 100%;
+      height: 100%;
+      margin: 0;
+      ::-webkit-scrollbar {
+        width: 4px;
+        height: 3px;
+        border-radius: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        border-radius: 5px;
+        background: $secondary;
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: darken($secondary, 40%);
+        border-radius: 5px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: darken($secondary, 40%);
+      }
+    }
+  }
+  .modal-right-element {
+    background: $dark;
+  }
+}

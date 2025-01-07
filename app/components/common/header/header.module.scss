@@ -1,0 +1,32 @@
+@import "../../../styles/fonts.scss";
+@import "../../../styles/mixins.scss";
+
+.header {
+  padding: 8px 20px;
+  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.025);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  background: #fff;
+  z-index: 999;
+
+  .header_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.brand_text {
+  @include font-properties(var(--font-secondary), 40px, 600, 30px);
+  text-decoration: none !important;
+  color: #000000;
+}
+
+.login_button {
+  @include font-properties(var(--font-secondary), 20px, 700, 33px);
+  text-decoration: none !important;
+  padding: 7px 24px;
+  gap: 8px;
+  text-decoration: none !important;
+}

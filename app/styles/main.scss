@@ -1,0 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
+
+@import "./abstracts/variable", "./components/icon-btn",
+  "./components/scrollbar";
+
+body {
+  font-family: "Montserrat", serif;
+  font-weight: 400;
+  p {
+    font-family: "Montserrat", serif;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Montserrat", serif;
+  font-weight: 500;
+}

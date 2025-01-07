@@ -1,0 +1,26 @@
+@import "./styles/fonts.scss";
+
+@import "./styles/mixins.scss";
+
+@import "./styles/palette.scss";
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Inter:wght@400;500;600;700&display=swap");
+:root {
+  --font-primary: "Montserrat", sans-serif;
+  --font-secondary: "Inter", sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+body,
+html {
+  // margin: 0;
+  height: 100%;
+}
+
+.lex_layout {
+  height: 100%;
+  width: 100%;
+}

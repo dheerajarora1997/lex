@@ -1,0 +1,71 @@
+@import "../../../styles/abstracts/variable";
+
+.sidebar {
+  height: calc(100vh - 65px);
+  min-width: 220px;
+  max-width: 240px;
+  overflow: hidden;
+  overflow-y: auto;
+  .sidebar-btn-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 9;
+  }
+  .recent-search,
+  .saved-search {
+    display: inline-block;
+    width: 100%;
+    .search-result {
+      min-height: 100px;
+      max-height: 400px;
+      overflow: hidden;
+      .search-result-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 30px 8px 12px;
+        border-bottom: 1px solid lighten($secondary, 15%);
+        position: relative;
+        span {
+          cursor: pointer;
+          &:not(.search-result-icons) {
+            max-width: 98%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+        .search-result-icons {
+          display: none;
+          position: absolute;
+          right: 5px;
+          top: 5px;
+          border-radius: 50%;
+          font-size: 17px;
+          width: 27px;
+          height: 27px;
+          text-align: center;
+          align-items: center;
+          justify-content: center;
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+        &:hover {
+          border-radius: 4px;
+          background: lighten($secondary, 18%);
+          .search-result-icons {
+            display: flex;
+            &:hover {
+              background: lighten($secondary, 12%);
+            }
+          }
+        }
+      }
+      &:hover {
+        overflow-y: auto;
+      }
+    }
+  }
+}

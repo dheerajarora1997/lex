@@ -1,0 +1,31 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/palette.scss";
+
+.auth_carousel_container {
+  border-radius: 36px;
+  overflow: hidden;
+  height: 100%;
+  background-color: rgba(73, 57, 144, 1);
+
+  :global(.swiper) {
+    height: 95%;
+  }
+
+  .auth_carousel_item {
+    display: "flex";
+    flex-direction: column;
+    justify-content: "space-between";
+    padding: 30px;
+
+    .top {
+      color: #fff;
+
+      .title {
+        @include font-properties(var(--font-primary), 32px, 700, 44px);
+      }
+      .subtitle {
+        @include font-properties(var(--font-primary), 20px, 400, 28px);
+      }
+    }
+  }
+}

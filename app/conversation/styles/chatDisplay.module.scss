@@ -1,0 +1,55 @@
+@import "../../styles/mixins.scss";
+
+.chat_display_container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+
+  .new_chat_heading {
+    @include font-properties(var(--font-primary), 32px, 700, 44px);
+  }
+
+  &.new_thread {
+    margin-top: 10%;
+    gap: 40px;
+  }
+
+  .suggestion_cards_container {
+    width: 50%;
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .header_text {
+        @include font-properties(var(--font-primary), 16px, 500, 25px);
+      }
+    }
+
+    .card_container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+
+      .card {
+        background-color: #f4f8ff;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        justify-content: center;
+        padding: 10px;
+        @include font-properties(var(--font-primary), 14px, 400, 25px);
+        color: #606060;
+      }
+
+      .large_card {
+        grid-column: span 2;
+      }
+    }
+  }
+}

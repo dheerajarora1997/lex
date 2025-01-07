@@ -1,0 +1,52 @@
+@import "../../styles//mixins.scss";
+
+.inputBoxContainer {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 60px;
+  padding: 8px 16px;
+  width: 100%;
+  max-width: 50%;
+  border: 1px solid rgba(0, 102, 255, 0.1);
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(4px);
+}
+
+.inputField {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  background-color: transparent;
+  padding: 8px;
+  color: #333;
+  @include font-properties(var(--font-primary), 18px, 400, 1.5);
+  height: calc(1.5em); /* Height for one line of text plus padding */
+  resize: vertical; /* Allow vertical resizing */
+  overflow-y: hidden;
+}
+
+.inputField::placeholder {
+  color: #666666;
+}
+
+.submitButton {
+  background-color: transparent; /* Transparent background */
+  border: none; /* No border */
+  outline: none; /* Remove focus outline */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include font-properties(var(--font-primary), 18px, 400, 28px);
+
+  padding: 0;
+  margin-left: 8px; /* Space between input and button */
+  color: #aaa; /* Icon color */
+  cursor: pointer; /* Pointer cursor */
+  transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.submitButton:hover {
+  color: #333; /* Darken color on hover */
+}
