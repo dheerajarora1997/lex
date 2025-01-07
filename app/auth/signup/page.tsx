@@ -4,7 +4,7 @@ import styles from "../styles/login.module.scss";
 import { ChangeEvent, useEffect, useState } from "react";
 import AuthHeader from "../components/authHeader";
 import { ValidationProvider } from "@/app/providers/validationProvider";
-import AuthFooter from "../components/authFooter";
+// import AuthFooter from "../components/authFooter";
 import { RegistrationRequest } from "../models/signupModels";
 import { useRegisterMutation } from "@/app/apiService/services/authApi";
 import { useRouter } from "next/navigation";

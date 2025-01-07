@@ -51,7 +51,9 @@ const OtpInput: React.FC<OtpInputProps> = ({
 
   const onClickResendOtp = () => {
     setTimer(resendTimer);
-    onClickResend();
+    if (onClickResend) {
+      onClickResend();
+    }
   };
 
   const handleOtpChange = (index: number, value: string) => {
@@ -63,7 +65,7 @@ const OtpInput: React.FC<OtpInputProps> = ({
       inputRefs?.current?.[index + 1]?.focus();
     }
   };
-
+  console.log(isValid);
   return (
     <div className={styles.form_field}>
       <div className={styles.otp_input}>
