@@ -1,20 +1,33 @@
-import Sidebar from "@/app/components/common/sidebar";
+import { Metadata } from "next";
+import Sidebar from "../components/sidebar";
 import ConversationChat from "../ConversationChat";
 
 interface PageProps {
-  params: {
-    id: string; // Match the dynamic route folder name [id]
+  params: Promise<{ id: string }>; // Expecting params to be a Promise
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  // Ensure you await params if they are a promise
+  const resolvedParams = await params;
+
+  return {
+    title: `Dynamic Page - ${resolvedParams.id}`,
+    description: `Page for ID: ${resolvedParams.id}`,
   };
 }
 
-const Page = ({ params }: PageProps) => {
-  const { id } = params;
+// Page Component
+const Page = async ({ params }: PageProps) => {
+  // Resolve params before using them
+  const { id } = await params;
 
   return (
     <>
       <Sidebar />
       <div className="w-100">
-        <small className="w-100 d-inline-block text-center">{id}</small>
+        <p className="text-center m-0">The ID is: {id}</p>
         <ConversationChat />
       </div>
     </>

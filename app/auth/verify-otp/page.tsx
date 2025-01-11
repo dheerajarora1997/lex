@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { ValidationProvider } from "@/app/providers/validationProvider";
 import AuthFooter from "../components/authFooter";
 import styles from "../styles/login.module.scss";
@@ -87,50 +88,52 @@ function VerifyOtp() {
   };
 
   return (
-    <div className={styles.transition_view}>
-      <div
-        className={`${styles.auth_container} ${styles.view} ${
-          !showConfirmationView ? styles.active : styles.hidden
-        }`}
-      >
-        <div className={styles.auth_inner_container}>
-          <AuthHeader
-            title="Verify Your Email"
-            subtitle={
-              <span>
-                Enter the 6-digit OTP sent to
-                <br />
-                <span className={styles.email_text}>{email}</span>
-              </span>
-            }
-          />
-          <ValidationProvider>
-            <form>
-              <OtpInput
-                length={6}
-                onComplete={(otp) => setOtp(otp)}
-                onClickResend={onClickResendOtp}
-              />
-            </form>
-          </ValidationProvider>
-          <AuthFooter
-            isPrimaryButtonLoading={isLoading}
-            onClickPrimaryButton={onClickVerifyOtp}
+    <Suspense>
+      <div className={styles.transition_view}>
+        <div
+          className={`${styles.auth_container} ${styles.view} ${
+            !showConfirmationView ? styles.active : styles.hidden
+          }`}
+        >
+          <div className={styles.auth_inner_container}>
+            <AuthHeader
+              title="Verify Your Email"
+              subtitle={
+                <span>
+                  Enter the 6-digit OTP sent to
+                  <br />
+                  <span className={styles.email_text}>{email}</span>
+                </span>
+              }
+            />
+            <ValidationProvider>
+              <form>
+                <OtpInput
+                  length={6}
+                  onComplete={(otp) => setOtp(otp)}
+                  onClickResend={onClickResendOtp}
+                />
+              </form>
+            </ValidationProvider>
+            <AuthFooter
+              isPrimaryButtonLoading={isLoading}
+              onClickPrimaryButton={onClickVerifyOtp}
+            />
+          </div>
+        </div>
+        <div
+          className={`${styles.view} ${
+            showConfirmationView ? styles.active : styles.hidden
+          }`}
+        >
+          <ConfirmationView
+            title="You're All Set!"
+            description="Your account has been successfully created. Get ready to explore and make the most of your journey with us!"
+            imageSrc="https://storage.cloud.google.com/lex_assets/confirmation_checkbox.png?authuser=1"
           />
         </div>
       </div>
-      <div
-        className={`${styles.view} ${
-          showConfirmationView ? styles.active : styles.hidden
-        }`}
-      >
-        <ConfirmationView
-          title="You're All Set!"
-          description="Your account has been successfully created. Get ready to explore and make the most of your journey with us!"
-          imageSrc="https://storage.cloud.google.com/lex_assets/confirmation_checkbox.png?authuser=1"
-        />
-      </div>
-    </div>
+    </Suspense>
   );
 }
 

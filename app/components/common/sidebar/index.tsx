@@ -1,20 +1,19 @@
 "use client";
 
-import { useDispatch } from "react-redux";
 import "./sidebar.scss";
-import { useAppSelector } from "@/app/store/hooks";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Sidebar() {
   const router = useRouter();
-  const dispatch = useDispatch();
-  const conversationData = useAppSelector((state) => state?.conversationData);
 
-  console.log(conversationData, dispatch);
   const sendToThread = (id: string) => {
     console.log(id);
     router.push(`/conversation/${id}`);
   };
+
+  const pathname = usePathname();
+  const threadId = pathname.split("/")[2];
+  console.log(threadId);
 
   return (
     <aside className="sidebar p-3 border-end">
