@@ -6,7 +6,7 @@ import AppButton from "@/app/components/common/appButton/index";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/app/hooks/useAuth";
-import TokenManager from "@/app/apiService/tokenManager";
+// import TokenManager from "@/app/apiService/tokenManager";
 
 // interface NavItem {
 //   label: string;
@@ -51,14 +51,11 @@ function Header() {
           </Link>
         </div>
 
-        {TokenManager.validateAuth() && (
-          <Link href={rightHandCta.href}>
-            <AppButton
-              text={rightHandCta.name}
-              className={styles.login_button}
-            />
-          </Link>
-        )}
+        <Link href={rightHandCta.href}>
+          <AppButton text={rightHandCta.name} className={styles.login_button} />
+        </Link>
+        {/* {TokenManager.validateAuth() && (
+        )} */}
       </div>
     </header>
   );

@@ -34,8 +34,6 @@ export const queryConfiguration = (
 
   if (baseUrl) {
     configuredObj.url = baseUrl + configuredObj.url;
-  } else {
-    configuredObj.url = process.env.REACT_APP_BASE_URL + configuredObj.url;
   }
 
   if (method) {

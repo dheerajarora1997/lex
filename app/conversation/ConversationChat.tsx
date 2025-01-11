@@ -1,8 +1,8 @@
 "use client";
+
 import "../styles/components/ConversationChat.scss";
 
 export default function ConversationChat() {
-  console.log("ConversationChat", process.env);
   return (
     <div className="chat-container">
       <div className="chat-wrapper">

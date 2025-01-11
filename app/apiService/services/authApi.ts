@@ -31,7 +31,6 @@ export const authApi = createApi({
     register: builder.mutation<RegistrationResponse, RegistrationRequest>({
       query: (payload) =>
         queryConfiguration({
-          baseUrl: `${process.env.REACT_APP_BASE_URL}`,
           url: "/register/",
           method: "POST",
           body: payload,
