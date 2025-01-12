@@ -7,7 +7,7 @@ function Conversation() {
   return (
     <>
       <Sidebar />
-      <ConversationChat />
+      <ConversationChat threadId="" />
     </>
   );
 }

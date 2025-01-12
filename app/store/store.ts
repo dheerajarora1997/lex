@@ -6,16 +6,20 @@ import conversationReducer from "./slices/conversationSlice";
 import { TypedUseSelectorHook } from "react-redux";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { conversationApi } from "../apiService/services/conversationApi";
 
 export const store = configureStore({
   reducer: {
     authData: authDataReducer,
     conversationData: conversationReducer,
     [authApi.reducerPath]: authApi.reducer,
+    [conversationApi.reducerPath]: conversationApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware),
+    getDefaultMiddleware()
+      .concat(authApi.middleware)
+      .concat(conversationApi.middleware),
 });
 
 // export type RootState = ReturnType<AppStore["getState"]>;

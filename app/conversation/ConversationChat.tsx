@@ -1,8 +1,45 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import "../styles/components/ConversationChat.scss";
+import { useViewThreadQuery } from "../apiService/services/conversationApi";
+import { isFetchBaseQueryError } from "../utils/apiErrorUtils";
+import { showErrorToast } from "../hooks/useNotify";
+import { APIErrorData } from "../models/commonApiModels";
+import { APP_ERROR_MESSAGE } from "../constants/appConstants";
 
-export default function ConversationChat() {
+interface ConversationChatProps {
+  threadId: string;
+}
+
+export default function ConversationChat({ threadId }: ConversationChatProps) {
+  const [userQuery, setUserQuery] = useState("");
+  const {
+    isLoading,
+    isError,
+    data,
+    error,
+    status,
+    refetch: viewThread,
+  } = useViewThreadQuery({ id: threadId });
+
+  console.log({ isLoading, isError, data, error, status });
+  useEffect(() => {
+    if (threadId) {
+      viewThread();
+    }
+  }, [threadId]);
+
+  useEffect(() => {
+    if (isError && error) {
+      if (isFetchBaseQueryError(error) && error?.status === 401) {
+        const errorData = error.data as APIErrorData;
+        showErrorToast(errorData?.detail ?? APP_ERROR_MESSAGE);
+      } else {
+        showErrorToast(APP_ERROR_MESSAGE);
+      }
+    }
+  }, [isError, error]);
   return (
     <div className="chat-container">
       <div className="chat-wrapper">
@@ -51,10 +88,10 @@ export default function ConversationChat() {
             <div className="form-group w-100 position-relative">
               <input
                 type="text"
-                //   value={newMessage}
-                //   onChange={(e) => setNewMessage(e.target.value)}
+                value={userQuery}
+                onChange={(e) => setUserQuery(e.target.value)}
                 placeholder="Type a message..."
-                className="chat-input form-control rounded-5"
+                className="chat-input form-control rounded-5 pe-5"
               />
               <button
                 className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center"

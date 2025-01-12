@@ -1,5 +1,6 @@
 "use client";
 
+// import { useThreadsQuery } from "@/app/apiService/services/conversationApi";
 import "./sidebar.scss";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -7,13 +8,15 @@ export default function Sidebar() {
   const router = useRouter();
 
   const sendToThread = (id: string) => {
-    console.log(id);
     router.push(`/conversation/${id}`);
   };
 
   const pathname = usePathname();
   const threadId = pathname.split("/")[2];
   console.log(threadId);
+
+  // const [{ isLoading, isError, data, error, status }] = useThreadsQuery();
+  // console.log({ isLoading, isError, data, error, status });
 
   return (
     <aside className="sidebar p-3 border-end">

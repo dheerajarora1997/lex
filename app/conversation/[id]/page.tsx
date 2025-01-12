@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Sidebar from "../components/sidebar";
+import Sidebar from "../../components/common/sidebar";
 import ConversationChat from "../ConversationChat";
 
 interface PageProps {
@@ -28,7 +28,7 @@ const Page = async ({ params }: PageProps) => {
       <Sidebar />
       <div className="w-100">
         <p className="text-center m-0">The ID is: {id}</p>
-        <ConversationChat />
+        <ConversationChat threadId={id} />
       </div>
     </>
   );
