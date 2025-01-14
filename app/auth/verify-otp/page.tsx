@@ -16,7 +16,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import ConfirmationView from "../components/confirmationView";
 import { showErrorToast } from "@/app/hooks/useNotify";
 
-function VerifyOtp() {
+function VerifyOtpContent() {
   const { email } = useAppSelector((state) => state.authData);
   const [otp, setOtp] = useState<string>("");
   const [showConfirmationView, setShowConfirmationView] =
@@ -133,6 +133,14 @@ function VerifyOtp() {
           />
         </div>
       </div>
+    </Suspense>
+  );
+}
+
+function VerifyOtp() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyOtpContent />
     </Suspense>
   );
 }
