@@ -1,9 +1,23 @@
 "use client";
 
-// import { useThreadsQuery } from "@/app/apiService/services/conversationApi";
+import {
+  useDeleteThreadMutation,
+  useStarredThreadsQuery,
+  useThreadsQuery,
+} from "@/app/apiService/services/conversationApi";
 import "./sidebar.scss";
 import { useRouter, usePathname } from "next/navigation";
 
+interface IthreadItem {
+  id: number; // Unique identifier for the thread
+  title: string; // Title of the thread
+  slug: string; // URL-friendly identifier for the thread
+  description: string | null; // Description of the thread, can be null
+  is_shareable: boolean; // Indicates if the thread is shareable
+  is_starred: boolean; // Indicates if the thread is marked as starred
+  created_at: string; // Date and time when the thread was created (ISO 8601 format)
+  updated_at: string; // Date and time when the thread was last updated (ISO 8601 format)
+}
 export default function Sidebar() {
   const router = useRouter();
 
@@ -15,8 +29,12 @@ export default function Sidebar() {
   const threadId = pathname.split("/")[2];
   console.log(threadId);
 
-  // const [{ isLoading, isError, data, error, status }] = useThreadsQuery();
-  // console.log({ isLoading, isError, data, error, status });
+  const { data, isLoading, isError, error } = useThreadsQuery({});
+  const { data: staredThreadsData } = useStarredThreadsQuery({});
+
+  const [deleteThread] = useDeleteThreadMutation();
+
+  console.log(data, isLoading, isError, error, "sidebar", staredThreadsData);
 
   return (
     <aside className="sidebar p-3 border-end">
@@ -35,55 +53,61 @@ export default function Sidebar() {
         <h4 className="fs-6 fw-bold">Past Search</h4>
         <h6 className="text-dark small">This week</h6>
         <div className="search-result">
-          <div
-            className="search-result-item"
-            onClick={() => {
-              sendToThread("qwe-qweqweqw-qweqweqwe");
-            }}
-          >
-            <span>Item #1 text and overflow test</span>
-            <span className="search-result-icons">
-              <button className="p-0 border-0 bg-transparent">🗑️</button>
-            </span>
-          </div>
-          <div
-            className="search-result-item"
-            onClick={() => {
-              sendToThread("dfsdf-sdfsdf-sdf");
-            }}
-          >
-            <span>Item #2 text and overflow test</span>
-            <span className="search-result-icons">
-              <button className="p-0 border-0 bg-transparent">🗑️</button>
-            </span>
-          </div>
+          {data?.results?.map((item: IthreadItem, index: number) => {
+            return (
+              <div
+                className="search-result-item"
+                key={index}
+                data-slug={item?.slug}
+                data-id={item?.id}
+                onClick={() => {
+                  sendToThread(item?.slug);
+                }}
+              >
+                <span>{item?.title}</span>
+                <span className="search-result-icons">
+                  <button
+                    className="p-0 border-0 bg-transparent"
+                    onClick={() => {
+                      deleteThread(item?.id.toString());
+                    }}
+                  >
+                    🗑️
+                  </button>
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
       <div className="saved-search">
         <h4 className="fs-6 fw-bold">Bookmark</h4>
         <div className="search-result">
-          <div
-            className="search-result-item"
-            onClick={() => {
-              sendToThread("fsdf-sdfsd-sdfsdfdsf");
-            }}
-          >
-            <span>Item #1 text and overflow test</span>
-            <span className="search-result-icons">
-              <button className="p-0 border-0 bg-transparent">🗑️</button>
-            </span>
-          </div>
-          <div
-            className="search-result-item"
-            onClick={() => {
-              sendToThread("sdfsdf-sdfsdf-sdsdf");
-            }}
-          >
-            <span>Item #2 text and overflow test</span>
-            <span className="search-result-icons">
-              <button className="p-0 border-0 bg-transparent">🗑️</button>
-            </span>
-          </div>
+          {staredThreadsData?.results?.map(
+            (item: IthreadItem, index: number) => {
+              return (
+                <div
+                  className="search-result-item"
+                  key={index}
+                  onClick={() => {
+                    sendToThread(item?.slug);
+                  }}
+                >
+                  <span>{item?.title}</span>
+                  <span className="search-result-icons">
+                    <button
+                      className="p-0 border-0 bg-transparent"
+                      onClick={() => {
+                        deleteThread(item?.id.toString());
+                      }}
+                    >
+                      🗑️
+                    </button>
+                  </span>
+                </div>
+              );
+            }
+          )}
         </div>
       </div>
     </aside>

@@ -2,17 +2,56 @@
 import { useEffect, useState } from "react";
 import "../styles/components/blankChat.scss";
 import { QUERY_SUGGESTIONS, SINGLE_SUGGESTION } from "./constants";
-import { useCreateThreadMutation } from "../apiService/services/conversationApi";
+import {
+  useCreateConversationMutation,
+  useCreateThreadMutation,
+} from "../apiService/services/conversationApi";
 import { isFetchBaseQueryError } from "../utils/apiErrorUtils";
 import { showErrorToast } from "../hooks/useNotify";
 import { APIErrorData } from "../models/commonApiModels";
 import { APP_ERROR_MESSAGE } from "../constants/appConstants";
+// import { useRouter } from "next/navigation";
 
 export default function BlankChat() {
+  // const router = useRouter();
   const [userQuery, setUserQuery] = useState("");
-  const [createThread, { isLoading, isError, data, error, status }] =
-    useCreateThreadMutation();
-  console.log(createThread, { isLoading, isError, data, error, status });
+  const [
+    createThread,
+    { data: createThreadData, isLoading, isError, data, error, status },
+  ] = useCreateThreadMutation();
+
+  const [
+    createConversation,
+    {
+      data: conversationData,
+      isLoading: conversationIsLoading,
+      isError: conversationIsError,
+      error: conversationError,
+      status: conversationStatus,
+    },
+  ] = useCreateConversationMutation();
+  console.log({ isLoading, isError, data, error, status }, createThreadData);
+  console.log(
+    {
+      conversationIsLoading,
+      conversationIsError,
+      conversationError,
+      conversationStatus,
+    },
+    conversationData,
+    "conversationData"
+  );
+
+  useEffect(() => {
+    if (createThreadData && userQuery) {
+      // To need to route on conversation page
+      // router.push(`/conversation/${createThreadData?.slug}`);
+      createConversation({
+        thread: createThreadData?.id.toString(),
+        user_input: userQuery,
+      });
+    }
+  }, [createThreadData]);
 
   useEffect(() => {
     if (isError && error) {

@@ -1,12 +1,12 @@
 class TokenManager {
   static isBrowser(): boolean {
-    return typeof window !== "undefined" && typeof document !== "undefined";
+    return typeof window !== "undefined";
   }
 
   // Set access token (in cookie)
   static setAccessToken(token: string) {
     if (TokenManager.isBrowser()) {
-      document.cookie = `access_token=${token}; path=/; max-age=300; HttpOnly`;
+      document.cookie = `access_token=${token}; path=/; max-age=300;`;
     }
   }
 

@@ -15,11 +15,10 @@ export const conversationApi = createApi({
     }),
 
     threads: builder.query({
-      query: (params) =>
+      query: () =>
         queryConfiguration({
           url: "/threads/",
           method: "GET",
-          params,
         }),
     }),
 
@@ -32,18 +31,17 @@ export const conversationApi = createApi({
     }),
 
     starredThreads: builder.query({
-      query: (payload) =>
+      query: () =>
         queryConfiguration({
-          url: "/login/",
-          method: "POST",
-          body: payload,
+          url: "/threads/starred",
+          method: "GET",
         }),
     }),
 
     starThread: builder.mutation({
       query: ({ payload, threadId }) =>
         queryConfiguration({
-          url: `/api/threads/${threadId}/star/`,
+          url: `/threads/${threadId}/star/`,
           method: "PATCH",
           body: payload,
         }),
@@ -56,14 +54,23 @@ export const conversationApi = createApi({
           method: "DELETE",
         }),
     }),
+    createConversation: builder.mutation({
+      query: (payload) =>
+        queryConfiguration({
+          url: "/search/",
+          method: "POST",
+          body: payload,
+        }),
+    }),
   }),
 });
 
 export const {
   useCreateThreadMutation,
-  useDeleteThreadMutation,
-  useStarThreadMutation,
   useThreadsQuery,
+  useStarThreadMutation,
   useViewThreadQuery,
   useStarredThreadsQuery,
+  useDeleteThreadMutation,
+  useCreateConversationMutation,
 } = conversationApi;

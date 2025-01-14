@@ -28,7 +28,7 @@ export const queryConfiguration = (
   if (callwithUserData) {
     const token = TokenManager.getAccessToken();
     configuredObj.headers = {
-      Authorization: token,
+      Authorization: `Bearer ${token}`,
     };
   }
 
@@ -68,7 +68,7 @@ export const createApiConfiguration = (
     configuredObj.prepareHeaders = (headers: Headers) => {
       const token = TokenManager.getAccessToken();
       if (token) {
-        headers.set("Authorization", token);
+        headers.set("Authorization", `Bearer ${token}`);
       }
       return headers;
     };

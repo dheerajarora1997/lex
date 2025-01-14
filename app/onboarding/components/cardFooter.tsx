@@ -14,7 +14,13 @@ function CardFooter({
   return (
     <div className={styles.card_footer}>
       {activeStepIndex < ONBOARDING_CARD_DETAILS_LIST.length - 1 ? (
-        <AppButton text="Skip" className={`${styles.left_cta} ${styles.cta}`} />
+        <AppButton
+          text="Skip"
+          className={`${styles.left_cta} ${styles.cta}`}
+          onClick={() => {
+            router.push("conversation/new");
+          }}
+        />
       ) : (
         <div />
       )}

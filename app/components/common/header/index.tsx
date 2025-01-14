@@ -6,7 +6,7 @@ import AppButton from "@/app/components/common/appButton/index";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/app/hooks/useAuth";
-// import TokenManager from "@/app/apiService/tokenManager";
+import TokenManager from "@/app/apiService/tokenManager";
 
 // interface NavItem {
 //   label: string;
@@ -22,6 +22,11 @@ function Header() {
   const { refreshToken } = useAuth();
 
   useEffect(() => {
+    const refresh = async () => {
+      await refreshToken();
+    };
+    refresh();
+
     const intervalId = setInterval(() => {
       refreshToken();
     }, REFRESH_INTERVAL);
@@ -37,8 +42,10 @@ function Header() {
     if (pathname) {
       if (pathname === "/auth/login") {
         setRightHandCta({ href: "/auth/signup", name: "Signup" });
-      } else {
+      } else if (pathname === "/auth/signup") {
         setRightHandCta({ href: "/auth/login", name: "Login" });
+      } else {
+        setRightHandCta({ href: "/profile", name: "profile" });
       }
     }
   }, [pathname]);
@@ -51,11 +58,14 @@ function Header() {
           </Link>
         </div>
 
-        <Link href={rightHandCta.href}>
-          <AppButton text={rightHandCta.name} className={styles.login_button} />
-        </Link>
-        {/* {TokenManager.validateAuth() && (
-        )} */}
+        {TokenManager.validateAuth() && (
+          <Link href={rightHandCta.href}>
+            <AppButton
+              text={rightHandCta.name}
+              className={styles.login_button}
+            />
+          </Link>
+        )}
       </div>
     </header>
   );
