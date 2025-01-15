@@ -30,6 +30,7 @@ interface IcaseDetails {
 export default function ConversationChat({ threadId }: ConversationChatProps) {
   const [userQuery, setUserQuery] = useState("");
   const [chatList, setChatList] = useState<Ichat[]>([]);
+  const [paramsCondition, setParamsCondition] = useState<boolean>(false);
   const {
     isLoading,
     isError,
@@ -58,11 +59,12 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
   useEffect(() => {
     if (threadId) {
       viewThread();
+      setParamsCondition(Boolean(window.location.search));
     }
   }, [threadId]);
 
   useEffect(() => {
-    if (threadData) {
+    if (threadData && !paramsCondition) {
       createConversation({
         thread: threadData?.id.toString() || "",
         user_input: threadData?.title || "",
@@ -74,6 +76,9 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
         sender: "userInput",
       });
       setChatList(chat);
+    }
+    if (!paramsCondition) {
+      setChatList([]);
     }
   }, [threadData]);
 
@@ -115,13 +120,14 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
 
     const aiMessage: Ichat = {
       id: conversationData?.id?.toString(),
-      message: `${
-        conversationData?.ai_response
-      } <hr /> <ul className="conversationDetail-list">${conversationData?.details?.map(
-        (detailItem: IcaseDetails, index: number) => {
-          return `<li key="${index}"><span>${detailItem?.case_id}</span><span>${detailItem?.case_number}</span></li>`;
-        }
-      )}</ul> <hr /> `,
+      message:
+        `${
+          conversationData?.ai_response
+        } <hr /> <ul className="conversationDetail-list">${conversationData?.details?.map(
+          (detailItem: IcaseDetails, index: number) => {
+            return `<li key="${index}"><span>${detailItem?.case_id}</span><span>${detailItem?.case_number}</span></li>`;
+          }
+        )}</ul>` || "",
       sender: "aiResponse",
     };
     setChatList(() => [userMessage, aiMessage]);

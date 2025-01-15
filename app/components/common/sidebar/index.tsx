@@ -22,7 +22,7 @@ export default function Sidebar() {
   const router = useRouter();
 
   const sendToThread = (id: string) => {
-    router.push(`/conversation/${id}`);
+    router.push(`/conversation/${id}?newSearch=false`);
   };
 
   const pathname = usePathname();
