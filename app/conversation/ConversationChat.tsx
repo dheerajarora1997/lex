@@ -9,6 +9,7 @@ import { APP_ERROR_MESSAGE } from "../constants/appConstants";
 import {
   useViewThreadQuery,
   useCreateConversationMutation,
+  useViewConversationQuery,
 } from "../apiService/services/conversationApi";
 
 interface ConversationChatProps {
@@ -39,6 +40,7 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
     status,
     refetch: viewThread,
   } = useViewThreadQuery({ id: threadId });
+  console.log({ isLoading, status });
 
   const [
     createConversation,
@@ -50,12 +52,17 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
       status: conversationStatus,
     },
   ] = useCreateConversationMutation();
+
   console.log({
     conversationIsLoading,
     conversationStatus,
   });
 
-  console.log({ isLoading, status });
+  const { data: conversationDataView, refetch: viewConversation } =
+    useViewConversationQuery({ id: threadData?.id.toString() });
+
+  console.log({ conversationDataView });
+
   useEffect(() => {
     if (threadId) {
       viewThread();
@@ -77,8 +84,9 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
       });
       setChatList(chat);
     }
-    if (!paramsCondition) {
+    if (paramsCondition) {
       setChatList([]);
+      viewConversation();
     }
   }, [threadData]);
 
@@ -107,11 +115,11 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
     }
   }, [conversationIsError, conversationError]);
 
+  // First conversation Data
   useEffect(() => {
     if (conversationData) {
       setChatList([]);
     }
-    console.log(conversationData, "conversationData");
     const userMessage: Ichat = {
       id: conversationData?.id?.toString(),
       message: conversationData?.user_input,
@@ -132,6 +140,14 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
     };
     setChatList(() => [userMessage, aiMessage]);
   }, [conversationData]);
+
+  // view already created conversation
+
+  useEffect(() => {
+    if (conversationDataView) {
+      // To Do set data in Set chat list
+    }
+  }, [conversationDataView]);
 
   return (
     <div className="chat-container">

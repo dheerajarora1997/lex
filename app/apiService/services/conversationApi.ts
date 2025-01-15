@@ -62,6 +62,21 @@ export const conversationApi = createApi({
           body: payload,
         }),
     }),
+    viewConversation: builder.query({
+      query: ({ id }: { id: string }) =>
+        queryConfiguration({
+          url: `/search/${id}`,
+          method: "GET",
+        }),
+    }),
+    updateConversation: builder.mutation({
+      query: ({ id, payload }) =>
+        queryConfiguration({
+          url: `/search/${id}`,
+          method: "POST",
+          body: payload,
+        }),
+    }),
   }),
 });
 
@@ -73,4 +88,6 @@ export const {
   useStarredThreadsQuery,
   useDeleteThreadMutation,
   useCreateConversationMutation,
+  useViewConversationQuery,
+  useUpdateConversationMutation,
 } = conversationApi;
