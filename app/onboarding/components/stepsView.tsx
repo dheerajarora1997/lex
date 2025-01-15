@@ -20,7 +20,7 @@ function StepsView({
     >
       <div className={styles.main}>
         <CardHeader />
-        <div className={styles.steps_highligher_container}>
+        {/* <div className={styles.steps_highligher_container}>
           {new Array(4).fill(null).map((value, index) => (
             <div
               className={`${styles.step} ${
@@ -29,7 +29,7 @@ function StepsView({
               key={index}
             />
           ))}
-        </div>
+        </div> */}
 
         <CardContent activeStepIndex={activeStepIndex} />
 

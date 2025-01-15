@@ -2,33 +2,80 @@
 
 import { useEffect, useState } from "react";
 import "../styles/components/ConversationChat.scss";
-import { useViewThreadQuery } from "../apiService/services/conversationApi";
 import { isFetchBaseQueryError } from "../utils/apiErrorUtils";
 import { showErrorToast } from "../hooks/useNotify";
 import { APIErrorData } from "../models/commonApiModels";
 import { APP_ERROR_MESSAGE } from "../constants/appConstants";
+import {
+  useViewThreadQuery,
+  useCreateConversationMutation,
+} from "../apiService/services/conversationApi";
 
 interface ConversationChatProps {
   threadId: string;
 }
 
+interface Ichat {
+  id: string;
+  message: string;
+  sender: "userInput" | "aiResponse";
+}
+
+interface IcaseDetails {
+  banch?: string;
+  case_number: string;
+  case_id: string;
+}
+
 export default function ConversationChat({ threadId }: ConversationChatProps) {
   const [userQuery, setUserQuery] = useState("");
+  const [chatList, setChatList] = useState<Ichat[]>([]);
   const {
     isLoading,
     isError,
-    data,
+    data: threadData,
     error,
     status,
     refetch: viewThread,
   } = useViewThreadQuery({ id: threadId });
 
-  console.log({ isLoading, isError, data, error, status });
+  const [
+    createConversation,
+    {
+      data: conversationData,
+      isLoading: conversationIsLoading,
+      isError: conversationIsError,
+      error: conversationError,
+      status: conversationStatus,
+    },
+  ] = useCreateConversationMutation();
+  console.log({
+    conversationIsLoading,
+    conversationStatus,
+  });
+
+  console.log({ isLoading, status });
   useEffect(() => {
     if (threadId) {
       viewThread();
     }
   }, [threadId]);
+
+  useEffect(() => {
+    if (threadData) {
+      createConversation({
+        thread: threadData?.id.toString() || "",
+        user_input: threadData?.title || "",
+      });
+      const chat: Ichat[] = [];
+      chat.push({
+        id: threadData?.id.toString(),
+        message: threadData?.title,
+        sender: "userInput",
+      });
+      setChatList(chat);
+    }
+  }, [threadData]);
 
   useEffect(() => {
     if (isError && error) {
@@ -39,49 +86,72 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
         showErrorToast(APP_ERROR_MESSAGE);
       }
     }
-  }, [isError, error]);
+  }, [isError, error, conversationIsError, conversationError]);
+
+  useEffect(() => {
+    if (conversationIsError && conversationError) {
+      if (
+        isFetchBaseQueryError(conversationError) &&
+        conversationError?.status === 401
+      ) {
+        const errorData = conversationError.data as APIErrorData;
+        showErrorToast(errorData?.detail ?? APP_ERROR_MESSAGE);
+      } else {
+        showErrorToast(APP_ERROR_MESSAGE);
+      }
+    }
+  }, [conversationIsError, conversationError]);
+
+  useEffect(() => {
+    if (conversationData) {
+      setChatList([]);
+    }
+    console.log(conversationData, "conversationData");
+    const userMessage: Ichat = {
+      id: conversationData?.id?.toString(),
+      message: conversationData?.user_input,
+      sender: "userInput",
+    };
+
+    const aiMessage: Ichat = {
+      id: conversationData?.id?.toString(),
+      message: `${
+        conversationData?.ai_response
+      } <hr /> <ul className="conversationDetail-list">${conversationData?.details?.map(
+        (detailItem: IcaseDetails, index: number) => {
+          return `<li key="${index}"><span>${detailItem?.case_id}</span><span>${detailItem?.case_number}</span></li>`;
+        }
+      )}</ul> <hr /> `,
+      sender: "aiResponse",
+    };
+    setChatList(() => [userMessage, aiMessage]);
+  }, [conversationData]);
+
   return (
     <div className="chat-container">
       <div className="chat-wrapper">
         <div className="chat-box">
           {/* chat bubbles will be gen here */}
-          <div className={`chat-bubble person1`}>
-            Accessibility tip: Using color to add meaning only provides a visual
-            indication, which will not be conveyed to users of assistive
-            technologies like screen readers.
-          </div>
-          <div className={`chat-bubble person2`}>
-            <p>
-              Accessibility tip: Using color to add meaning only provides a
-              visual indication, which will not be conveyed to users of
-              assistive technologies like screen readers. Please ensure the
-              meaning is obvious from the content itself (e.g., the visible text
-              with a sufficient color contrast) or is included through
-              alternative means, such as additional text hidden with the
-              .visually-hidden class.
-            </p>
-            <button
-              className="btn btn-secondary btn-sm"
-              data-bs-toggle="modal"
-              data-bs-target="#firstModal"
+          {chatList.map((chat, index) => (
+            <div
+              key={index}
+              className={`chat-bubble ${
+                chat?.sender === "userInput" ? "person1" : "person2"
+              }`}
             >
-              Open Modal
-            </button>
-          </div>
-          <div className={`chat-bubble person1`}>
-            Please ensure the meaning is obvious from the content itself (e.g.,
-            the visible text with a sufficient color contrast) or is included
-            through alternative means, such as additional text hidden with the
-            .visually-hidden class.
-          </div>
-          <div className={`chat-bubble person2`}>
-            Accessibility tip: Using color to add meaning only provides a visual
-            indication, which will not be conveyed to users of assistive
-            technologies like screen readers. Please ensure the meaning is
-            obvious from the content itself (e.g., the visible text with a
-            sufficient color contrast) or is included through alternative means,
-            such as additional text hidden with the .visually-hidden class.
-          </div>
+              {chat?.sender === "userInput" ? (
+                chat.message
+              ) : chat.message ? (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: chat?.message,
+                  }}
+                />
+              ) : (
+                <></>
+              )}
+            </div>
+          ))}
         </div>
         <div className="chat-input-wrapper">
           <div className="chat-input-container">

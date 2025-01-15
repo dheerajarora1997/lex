@@ -2,54 +2,31 @@
 import { useEffect, useState } from "react";
 import "../styles/components/blankChat.scss";
 import { QUERY_SUGGESTIONS, SINGLE_SUGGESTION } from "./constants";
-import {
-  useCreateConversationMutation,
-  useCreateThreadMutation,
-} from "../apiService/services/conversationApi";
+import { useCreateThreadMutation } from "../apiService/services/conversationApi";
 import { isFetchBaseQueryError } from "../utils/apiErrorUtils";
 import { showErrorToast } from "../hooks/useNotify";
 import { APIErrorData } from "../models/commonApiModels";
 import { APP_ERROR_MESSAGE } from "../constants/appConstants";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function BlankChat() {
-  // const router = useRouter();
+  const router = useRouter();
   const [userQuery, setUserQuery] = useState("");
   const [
     createThread,
-    { data: createThreadData, isLoading, isError, data, error, status },
+    { data: createThreadData, isLoading, isError, error, status },
   ] = useCreateThreadMutation();
 
-  const [
-    createConversation,
-    {
-      data: conversationData,
-      isLoading: conversationIsLoading,
-      isError: conversationIsError,
-      error: conversationError,
-      status: conversationStatus,
-    },
-  ] = useCreateConversationMutation();
-  console.log({ isLoading, isError, data, error, status }, createThreadData);
-  console.log(
-    {
-      conversationIsLoading,
-      conversationIsError,
-      conversationError,
-      conversationStatus,
-    },
-    conversationData,
-    "conversationData"
-  );
+  console.log({ isLoading, isError, error, status }, createThreadData);
 
   useEffect(() => {
     if (createThreadData && userQuery) {
       // To need to route on conversation page
-      // router.push(`/conversation/${createThreadData?.slug}`);
-      createConversation({
-        thread: createThreadData?.id.toString(),
-        user_input: userQuery,
-      });
+      router.push(`/conversation/${createThreadData?.slug}`);
+      // createConversation({
+      //   thread: createThreadData?.id.toString(),
+      //   user_input: userQuery,
+      // });
     }
   }, [createThreadData]);
 
@@ -82,7 +59,7 @@ export default function BlankChat() {
               className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center"
               onClick={() => {
                 if (userQuery) {
-                  createThread({ query: userQuery });
+                  createThread({ title: userQuery });
                 } else {
                   alert("kindly add some text to search");
                 }

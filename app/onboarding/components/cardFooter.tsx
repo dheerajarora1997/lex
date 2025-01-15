@@ -42,7 +42,7 @@ function CardFooter({
           }
           onClick={() => {
             if (activeStepIndex === ONBOARDING_CARD_DETAILS_LIST.length - 1) {
-              router.replace("/");
+              router.replace("/conversation/new");
             } else {
               setActiveStepIndex(activeStepIndex + 1);
             }
