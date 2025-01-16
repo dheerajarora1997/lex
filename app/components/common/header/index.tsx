@@ -22,11 +22,6 @@ function Header() {
   const { refreshToken } = useAuth();
 
   useEffect(() => {
-    const refresh = async () => {
-      await refreshToken();
-    };
-    refresh();
-
     const intervalId = setInterval(() => {
       refreshToken();
     }, REFRESH_INTERVAL);

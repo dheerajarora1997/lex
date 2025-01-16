@@ -59,34 +59,40 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
   });
 
   const { data: conversationDataView, refetch: viewConversation } =
-    useViewConversationQuery({ id: threadData?.id.toString() });
+    useViewConversationQuery(
+      { id: threadData?.id.toString() },
+      {
+        skip: !threadData,
+      }
+    );
 
   console.log({ conversationDataView });
 
   useEffect(() => {
     if (threadId) {
       viewThread();
-      setParamsCondition(Boolean(window.location.search));
+      setParamsCondition(Boolean(window?.location?.search));
     }
   }, [threadId]);
 
   useEffect(() => {
-    if (threadData && !paramsCondition) {
-      createConversation({
-        thread: threadData?.id.toString() || "",
-        user_input: threadData?.title || "",
-      });
-      const chat: Ichat[] = [];
-      chat.push({
-        id: threadData?.id.toString(),
-        message: threadData?.title,
-        sender: "userInput",
-      });
-      setChatList(chat);
-    }
-    if (paramsCondition) {
-      setChatList([]);
-      viewConversation();
+    if (threadData) {
+      if (paramsCondition) {
+        setChatList([]);
+        viewConversation();
+      } else {
+        createConversation({
+          thread: threadData?.id.toString() || "",
+          user_input: threadData?.title || "",
+        });
+        const chat: Ichat[] = [];
+        chat.push({
+          id: threadData?.id.toString(),
+          message: threadData?.title,
+          sender: "userInput",
+        });
+        setChatList(chat);
+      }
     }
   }, [threadData]);
 
@@ -146,6 +152,28 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
   useEffect(() => {
     if (conversationDataView) {
       // To Do set data in Set chat list
+      setChatList([]);
+      const userMessage: Ichat = {
+        id: conversationDataView?.id?.toString(),
+        message: conversationDataView?.user_input,
+        sender: "userInput",
+      };
+
+      const aiMessage: Ichat = {
+        id: conversationDataView?.id?.toString(),
+        message:
+          `${conversationDataView?.ai_response} ${
+            conversationDataView?.details?.length
+              ? `<hr /> <ul className="conversationDetail-list">${conversationDataView?.details?.map(
+                  (detailItem: IcaseDetails, index: number) => {
+                    return `<li key="${index}"><span>${detailItem?.case_id}</span><span>${detailItem?.case_number}</span></li>`;
+                  }
+                )}</ul>`
+              : ""
+          } ` || "",
+        sender: "aiResponse",
+      };
+      setChatList(() => [userMessage, aiMessage]);
     }
   }, [conversationDataView]);
 

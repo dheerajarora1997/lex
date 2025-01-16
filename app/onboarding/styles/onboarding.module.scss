@@ -12,7 +12,7 @@
 
   .onboarding_card {
     width: 50%;
-    height: 55%;
+    height: calc(100vh - 100px);
     position: relative;
     top: 10%;
     box-shadow: 0px 12px 36px 0px rgba(0, 0, 0, 0.08);
