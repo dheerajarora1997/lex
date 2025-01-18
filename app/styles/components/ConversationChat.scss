@@ -24,12 +24,17 @@
         padding: 10px 15px;
         margin: 10px 20px;
         border-radius: 15px;
-        max-width: 660px;
         width: auto;
         word-wrap: break-word;
         min-height: auto;
         height: auto;
         position: relative;
+        @media only screen and (max-width: 768px) {
+          max-width: 80%;
+        }
+        @media only screen and (min-width: 768px) {
+          max-width: 660px;
+        }
         p {
           margin: 0;
         }

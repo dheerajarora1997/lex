@@ -35,6 +35,7 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
   const isSidebarCollapsed = useSelector(
     (state: RootState) => state.frontendElements.sidebarCollapse
   );
+  const deviceWidth = typeof window !== "undefined" ? window.innerWidth : 0;
 
   const [userQuery, setUserQuery] = useState("");
   const [chatList, setChatList] = useState<Ichat[]>([]);
@@ -188,7 +189,7 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
           <Loader />
         </div>
       )}
-      <div className={`chat-container ${isSidebarCollapsed ? "px-5" : ""}`}>
+      <div className={`chat-container ${deviceWidth < 768 ? "ps-5" : ""}`}>
         <div className="chat-wrapper">
           <div className="chat-box">
             {/* chat bubbles will be gen here */}

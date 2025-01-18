@@ -10,6 +10,7 @@ import { APP_ERROR_MESSAGE } from "../constants/appConstants";
 import { useRouter } from "next/navigation";
 
 export default function BlankChat() {
+  const deviceWidth = typeof window !== "undefined" ? window.innerWidth : 0;
   const router = useRouter();
   const [userQuery, setUserQuery] = useState("");
   const [
@@ -43,7 +44,7 @@ export default function BlankChat() {
 
   return (
     <div className="container">
-      <div className="blank-chat m-auto">
+      <div className={`blank-chat m-auto ${deviceWidth < 768 ? "ps-5" : ""}`}>
         <div className="">
           <h1 className="fs-4 text-center">AI-Powered Search Revolution!</h1>
           <div className="form-group position-relative mb-4 col-sm-12 col-md-8 mx-auto">

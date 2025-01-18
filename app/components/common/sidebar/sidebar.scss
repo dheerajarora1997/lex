@@ -110,11 +110,6 @@
     }
   }
   &._collapse {
-    @media only screen and (min-width: 768px) {
-      transform: translateX(-190px);
-    }
-    @media only screen and (max-width: 768px) {
-      transform: translateX(-175px);
-    }
+    transform: translateX(-190px);
   }
 }
