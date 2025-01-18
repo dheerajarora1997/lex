@@ -13,6 +13,7 @@ import {
 } from "../apiService/services/conversationApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import Loader from "../components/common/Loader";
 
 interface ConversationChatProps {
   threadId: string;
@@ -181,56 +182,63 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
   }, [conversationDataView]);
 
   return (
-    <div className={`chat-container ${isSidebarCollapsed ? "px-5" : ""}`}>
-      <div className="chat-wrapper">
-        <div className="chat-box">
-          {/* chat bubbles will be gen here */}
-          {chatList.map((chat, index) => (
-            <div
-              key={index}
-              className={`chat-bubble ${
-                chat?.sender === "userInput" ? "person1" : "person2"
-              }`}
-            >
-              {chat?.sender === "userInput" ? (
-                chat.message
-              ) : chat.message ? (
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: chat?.message,
-                  }}
-                />
-              ) : (
-                <></>
-              )}
-            </div>
-          ))}
+    <>
+      {(isLoading || conversationIsLoading) && (
+        <div className="backdrop">
+          <Loader />
         </div>
-        <div
-          className={`chat-input-wrapper ${isSidebarCollapsed ? "px-5" : ""}`}
-        >
-          <div className="chat-input-container">
-            <div className="form-group w-100 position-relative">
-              <input
-                type="text"
-                value={userQuery}
-                onChange={(e) => setUserQuery(e.target.value)}
-                placeholder="Type a message..."
-                className="chat-input form-control rounded-5 pe-5"
-              />
-              <button
-                className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center"
-                onClick={() => {
-                  console.log("btn click");
-                  // dispatch(increment());
-                }}
+      )}
+      <div className={`chat-container ${isSidebarCollapsed ? "px-5" : ""}`}>
+        <div className="chat-wrapper">
+          <div className="chat-box">
+            {/* chat bubbles will be gen here */}
+            {chatList.map((chat, index) => (
+              <div
+                key={index}
+                className={`chat-bubble ${
+                  chat?.sender === "userInput" ? "person1" : "person2"
+                }`}
               >
-                🡒
-              </button>
+                {chat?.sender === "userInput" ? (
+                  chat.message
+                ) : chat.message ? (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: chat?.message,
+                    }}
+                  />
+                ) : (
+                  <></>
+                )}
+              </div>
+            ))}
+          </div>
+          <div
+            className={`chat-input-wrapper ${isSidebarCollapsed ? "px-5" : ""}`}
+          >
+            <div className="chat-input-container">
+              <div className="form-group w-100 position-relative">
+                <input
+                  type="text"
+                  value={userQuery}
+                  onChange={(e) => setUserQuery(e.target.value)}
+                  placeholder="Type a message..."
+                  className="chat-input form-control rounded-5 pe-5"
+                />
+                <button
+                  className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center"
+                  onClick={() => {
+                    console.log("btn click");
+                    // dispatch(increment());
+                  }}
+                >
+                  🡒
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
