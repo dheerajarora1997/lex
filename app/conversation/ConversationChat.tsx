@@ -40,7 +40,7 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
     status,
     refetch: viewThread,
   } = useViewThreadQuery({ id: threadId });
-  console.log({ isLoading, status });
+  console.log(isLoading, status);
 
   const [
     createConversation,
@@ -53,10 +53,7 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
     },
   ] = useCreateConversationMutation();
 
-  console.log({
-    conversationIsLoading,
-    conversationStatus,
-  });
+  console.log(conversationIsLoading, conversationStatus);
 
   const { data: conversationDataView, refetch: viewConversation } =
     useViewConversationQuery(
@@ -66,7 +63,7 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
       }
     );
 
-  console.log({ conversationDataView });
+  console.log(conversationDataView);
 
   useEffect(() => {
     if (threadId) {
@@ -135,13 +132,14 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
     const aiMessage: Ichat = {
       id: conversationData?.id?.toString(),
       message:
-        `${
-          conversationData?.ai_response
-        } <hr /> <ul className="conversationDetail-list">${conversationData?.details?.map(
-          (detailItem: IcaseDetails, index: number) => {
-            return `<li key="${index}"><span>${detailItem?.case_id}</span><span>${detailItem?.case_number}</span></li>`;
-          }
-        )}</ul>` || "",
+        `${conversationData?.ai_response} ${
+          conversationData?.details?.length
+            ? `<hr /><div class="conversationDetail-list"><h4 class="fs-6">Source:</h4> <ol class="">${conversationData?.details?.map(
+                (detailItem: IcaseDetails, index: number) =>
+                  `<li key="${index}"><span class="fw-bold">${detailItem?.case_id}</span><span>${detailItem?.case_number}</span></li>`
+              )}</ol><div>`
+            : ""
+        }` || "",
       sender: "aiResponse",
     };
     setChatList(() => [userMessage, aiMessage]);
@@ -164,13 +162,12 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
         message:
           `${conversationDataView?.ai_response} ${
             conversationDataView?.details?.length
-              ? `<hr /> <ul className="conversationDetail-list">${conversationDataView?.details?.map(
-                  (detailItem: IcaseDetails, index: number) => {
-                    return `<li key="${index}"><span>${detailItem?.case_id}</span><span>${detailItem?.case_number}</span></li>`;
-                  }
-                )}</ul>`
+              ? `<hr /><div class="conversationDetail-list"><h4 class="fs-6">Source:</h4> <ol class="">${conversationDataView?.details?.map(
+                  (detailItem: IcaseDetails, index: number) =>
+                    `<li key="${index}"><span class="fw-bold">${detailItem?.case_id}</span><span>${detailItem?.case_number}</span></li>`
+                )}</ol><div>`
               : ""
-          } ` || "",
+          }` || "",
         sender: "aiResponse",
       };
       setChatList(() => [userMessage, aiMessage]);

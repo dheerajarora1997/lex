@@ -40,7 +40,7 @@ export default function Sidebar() {
     <aside className="sidebar p-3 border-end">
       <div className="sidebar-btn-wrapper">
         <button
-          className="btn bg-transparent w-100 d-flex justify-content-between border px-3 py-2"
+          className="btn bg-transparent d-flex justify-content-between border p-2 ps-3"
           onClick={() => {
             sendToThread("new");
           }}
@@ -48,12 +48,20 @@ export default function Sidebar() {
           <span>New Research</span>
           <span className="fw-bold fs-5 lh-1">+</span>
         </button>
+        <button className="btn bg-transparent toggle-navbar">
+          <span className="toggle-navbar-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+              <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" />
+            </svg>
+          </span>
+        </button>
       </div>
       <div className="recent-search mt-3">
         <h4 className="fs-6 fw-bold">Past Search</h4>
         <h6 className="text-dark small">This week</h6>
         <div className="search-result">
           {data?.results?.map((item: IthreadItem, index: number) => {
+            if (index > 4) return null;
             return (
               <div
                 className="search-result-item"
@@ -85,6 +93,7 @@ export default function Sidebar() {
         <div className="search-result">
           {staredThreadsData?.results?.map(
             (item: IthreadItem, index: number) => {
+              if (index > 4) return null;
               return (
                 <div
                   className="search-result-item"
