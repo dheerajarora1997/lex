@@ -8,8 +8,8 @@ export default function AuthLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pageURL = window.location.pathname;
-  const deviceWidth = window.innerWidth;
+  const pageURL = typeof window !== "undefined" ? window.location.pathname : "";
+  const deviceWidth = typeof window !== "undefined" ? window.innerWidth : 0;
   return (
     <div className={`${styles.auth_layout_container} bg-error`}>
       <div className={styles.auth_layout_inner_container}>

@@ -24,7 +24,7 @@ interface IthreadItem {
 }
 export default function Sidebar() {
   const router = useRouter();
-  const deviceWidth = window.innerWidth;
+  const deviceWidth = typeof window !== "undefined" ? window.innerWidth : 0;
   const isSidebarCollapsed = useSelector(
     (state: RootState) => state.frontendElements.sidebarCollapse
   );

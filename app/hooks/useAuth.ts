@@ -21,7 +21,12 @@ export const useAuth = () => {
       TokenManager.setRefreshToken(response.data?.refresh);
     } else if (response.error) {
       setAuthState(false);
-      window.location.href = "/auth/login";
+      if (
+        typeof window !== "undefined" &&
+        typeof window?.location !== "undefined"
+      ) {
+        window.location.href = "/auth/login";
+      }
       TokenManager.clearTokens();
     }
   }, []);

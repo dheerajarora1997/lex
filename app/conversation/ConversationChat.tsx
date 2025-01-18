@@ -75,7 +75,7 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
   useEffect(() => {
     if (threadId) {
       viewThread();
-      setParamsCondition(Boolean(window?.location?.search));
+      setParamsCondition(Boolean(window?.location?.search || ""));
     }
   }, [threadId]);
 
