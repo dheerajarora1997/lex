@@ -11,6 +11,8 @@ import {
   useCreateConversationMutation,
   useViewConversationQuery,
 } from "../apiService/services/conversationApi";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 interface ConversationChatProps {
   threadId: string;
@@ -29,6 +31,10 @@ interface IcaseDetails {
 }
 
 export default function ConversationChat({ threadId }: ConversationChatProps) {
+  const isSidebarCollapsed = useSelector(
+    (state: RootState) => state.frontendElements.sidebarCollapse
+  );
+
   const [userQuery, setUserQuery] = useState("");
   const [chatList, setChatList] = useState<Ichat[]>([]);
   const [paramsCondition, setParamsCondition] = useState<boolean>(false);
@@ -175,7 +181,7 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
   }, [conversationDataView]);
 
   return (
-    <div className="chat-container">
+    <div className={`chat-container ${isSidebarCollapsed ? "px-5" : ""}`}>
       <div className="chat-wrapper">
         <div className="chat-box">
           {/* chat bubbles will be gen here */}
@@ -200,7 +206,9 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
             </div>
           ))}
         </div>
-        <div className="chat-input-wrapper">
+        <div
+          className={`chat-input-wrapper ${isSidebarCollapsed ? "px-5" : ""}`}
+        >
           <div className="chat-input-container">
             <div className="form-group w-100 position-relative">
               <input

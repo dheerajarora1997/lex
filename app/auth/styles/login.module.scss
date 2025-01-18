@@ -42,6 +42,11 @@
     display: flex;
     flex-direction: column;
     gap: 40px;
+    @media only screen and (max-width: 640px) {
+      width: 100%;
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
 
     .auth_form_container {
       display: flex;

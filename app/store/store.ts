@@ -7,6 +7,7 @@ import { TypedUseSelectorHook } from "react-redux";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { conversationApi } from "../apiService/services/conversationApi";
+import frontendElementReducer from "./slices/frontendElements";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     conversationData: conversationReducer,
     [authApi.reducerPath]: authApi.reducer,
     [conversationApi.reducerPath]: conversationApi.reducer,
+    frontendElements: frontendElementReducer,
   },
 
   middleware: (getDefaultMiddleware) =>

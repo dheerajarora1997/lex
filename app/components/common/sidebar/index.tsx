@@ -7,6 +7,10 @@ import {
 } from "@/app/apiService/services/conversationApi";
 import "./sidebar.scss";
 import { useRouter, usePathname } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { setFrontendElement } from "@/app/store/slices/frontendElements";
+import { useEffect } from "react";
 
 interface IthreadItem {
   id: number; // Unique identifier for the thread
@@ -20,6 +24,15 @@ interface IthreadItem {
 }
 export default function Sidebar() {
   const router = useRouter();
+  const deviceWidth = window.innerWidth;
+  const isSidebarCollapsed = useSelector(
+    (state: RootState) => state.frontendElements.sidebarCollapse
+  );
+  const dispatch = useDispatch();
+
+  const toggleSidebar = () => {
+    dispatch(setFrontendElement(!isSidebarCollapsed));
+  };
 
   const sendToThread = (id: string) => {
     router.push(`/conversation/${id}?newSearch=false`);
@@ -34,13 +47,25 @@ export default function Sidebar() {
 
   const [deleteThread] = useDeleteThreadMutation();
 
+  useEffect(() => {
+    if (deviceWidth < 768) {
+      dispatch(setFrontendElement(true));
+    }
+  }, [deviceWidth]);
+
   console.log(data, isLoading, isError, error, "sidebar", staredThreadsData);
 
   return (
-    <aside className="sidebar p-3 border-end">
+    <aside
+      className={`sidebar p-3 bg-white border-end z-3 ${
+        isSidebarCollapsed ? "_collapse" : "_expended"
+      } ${deviceWidth < 768 ? "position-absolute" : ""}`}
+    >
       <div className="sidebar-btn-wrapper">
         <button
-          className="btn bg-transparent d-flex justify-content-between border p-2 ps-3"
+          className={`btn bg-transparent d-flex justify-content-between border py-2 px-3 ${
+            deviceWidth > 768 ? "w-100" : ""
+          }`}
           onClick={() => {
             sendToThread("new");
           }}
@@ -48,7 +73,14 @@ export default function Sidebar() {
           <span>New Research</span>
           <span className="fw-bold fs-5 lh-1">+</span>
         </button>
-        <button className="btn bg-transparent toggle-navbar">
+        <button
+          className={`btn bg-transparent toggle-navbar ${
+            isSidebarCollapsed ? "_collapse" : "_expended"
+          } ${deviceWidth > 768 ? "d-none" : ""}`}
+          onClick={() => {
+            toggleSidebar();
+          }}
+        >
           <span className="toggle-navbar-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
               <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" />

@@ -18,9 +18,17 @@
     box-sizing: border-box;
     overflow: auto;
 
+    @media only screen and (max-width: 640px) {
+      flex-direction: column-reverse;
+    }
+
     .left_container {
       flex: 1;
       overflow: hidden;
+      margin-top: 40px;
+      @media only screen and (max-width: 640px) {
+        margin-top: 120px;
+      }
     }
 
     .right_container {
@@ -79,5 +87,8 @@
     @include font-properties(var(--font-primary), 18px, 400, 28px);
     width: 60%;
     text-align: center;
+    @media only screen and (max-width: 640px) {
+      width: 100%;
+    }
   }
 }
