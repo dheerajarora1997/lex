@@ -110,6 +110,10 @@
     }
   }
   &._collapse {
-    transform: translateX(-190px);
+    transform: translateX(-176px);
+    .recent-search,
+    .saved-search {
+      display: none;
+    }
   }
 }

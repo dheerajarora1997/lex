@@ -45,10 +45,8 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
     isError,
     data: threadData,
     error,
-    status,
     refetch: viewThread,
   } = useViewThreadQuery({ id: threadId });
-  console.log(isLoading, status);
 
   const [
     createConversation,
@@ -57,11 +55,8 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
       isLoading: conversationIsLoading,
       isError: conversationIsError,
       error: conversationError,
-      status: conversationStatus,
     },
   ] = useCreateConversationMutation();
-
-  console.log(conversationIsLoading, conversationStatus);
 
   const { data: conversationDataView, refetch: viewConversation } =
     useViewConversationQuery(
@@ -71,12 +66,12 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
       }
     );
 
-  console.log(conversationDataView);
-
   useEffect(() => {
     if (threadId) {
       viewThread();
-      setParamsCondition(Boolean(window?.location?.search || ""));
+      setParamsCondition(
+        Boolean(typeof window !== undefined ? window?.location?.search : "")
+      );
     }
   }, [threadId]);
 

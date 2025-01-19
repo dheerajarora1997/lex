@@ -40,7 +40,7 @@ function Header() {
       } else if (pathname === "/auth/signup") {
         setRightHandCta({ href: "/auth/login", name: "Login" });
       } else {
-        setRightHandCta({ href: "/profile", name: "profile" });
+        setRightHandCta({ href: "/auth/logout", name: "Logout" });
       }
     }
   }, [pathname]);
@@ -53,13 +53,31 @@ function Header() {
           </Link>
         </div>
 
-        {TokenManager.validateAuth() && (
+        {TokenManager.validateAuth() ? (
           <Link href={rightHandCta.href}>
             <AppButton
               text={rightHandCta.name}
               className={styles.login_button}
             />
           </Link>
+        ) : (
+          <>
+            {typeof window !== undefined &&
+            window.location.pathname === "/auth/login" ? (
+              <Link href="/auth/signup">
+                <button className="btn btn-primary text-white fw-bold">
+                  Sign up
+                </button>
+              </Link>
+            ) : typeof window !== undefined &&
+              window.location.pathname === "/auth/signup" ? (
+              <Link href="/auth/login">
+                <button className="btn btn-primary text-white fw-bold">
+                  Login
+                </button>
+              </Link>
+            ) : null}
+          </>
         )}
       </div>
     </header>

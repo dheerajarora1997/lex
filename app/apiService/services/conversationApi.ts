@@ -4,6 +4,7 @@ import { createApiConfiguration, queryConfiguration } from "../utils";
 export const conversationApi = createApi({
   reducerPath: "conversationApi",
   baseQuery: fetchBaseQuery(createApiConfiguration({ callwithUserData: true })),
+  tagTypes: ["threads"],
   endpoints: (builder) => ({
     createThread: builder.mutation({
       query: (payload) =>
@@ -12,6 +13,7 @@ export const conversationApi = createApi({
           method: "POST",
           body: payload,
         }),
+      invalidatesTags: ["threads"],
     }),
 
     threads: builder.query({
@@ -20,6 +22,7 @@ export const conversationApi = createApi({
           url: "/threads/",
           method: "GET",
         }),
+      providesTags: ["threads"],
     }),
 
     viewThread: builder.query({
@@ -61,6 +64,7 @@ export const conversationApi = createApi({
           method: "POST",
           body: payload,
         }),
+      invalidatesTags: ["threads"],
     }),
     viewConversation: builder.query({
       query: ({ id }: { id: string }) =>

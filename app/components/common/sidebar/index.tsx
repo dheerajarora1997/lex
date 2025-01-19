@@ -42,7 +42,7 @@ export default function Sidebar() {
   const threadId = pathname.split("/")[2];
   console.log(threadId);
 
-  const { data, isLoading, isError, error } = useThreadsQuery({});
+  const { data } = useThreadsQuery({});
   const { data: staredThreadsData } = useStarredThreadsQuery({});
 
   const [deleteThread] = useDeleteThreadMutation();
@@ -51,9 +51,9 @@ export default function Sidebar() {
     if (deviceWidth < 768) {
       dispatch(setFrontendElement(true));
     }
-  }, [deviceWidth]);
+  }, []);
 
-  console.log(data, isLoading, isError, error, "sidebar", staredThreadsData);
+  console.log(data, "sidebar", staredThreadsData);
 
   return (
     <aside
