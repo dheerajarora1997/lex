@@ -33,6 +33,14 @@ export const conversationApi = createApi({
         }),
     }),
 
+    viewConvoThread: builder.query({
+      query: ({ id }: { id: string }) =>
+        queryConfiguration({
+          url: `/search/thread/?pk=${id}`,
+          method: "GET",
+        }),
+    }),
+
     starredThreads: builder.query({
       query: () =>
         queryConfiguration({
@@ -89,6 +97,7 @@ export const {
   useThreadsQuery,
   useStarThreadMutation,
   useViewThreadQuery,
+  useViewConvoThreadQuery,
   useStarredThreadsQuery,
   useDeleteThreadMutation,
   useCreateConversationMutation,

@@ -8,30 +8,41 @@ import { APIErrorData } from "../models/commonApiModels";
 import { APP_ERROR_MESSAGE } from "../constants/appConstants";
 import {
   useViewThreadQuery,
+  useViewConvoThreadQuery,
   useCreateConversationMutation,
   useViewConversationQuery,
 } from "../apiService/services/conversationApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import Loader from "../components/common/Loader";
+import { useRouter } from "next/navigation";
+import { skip } from "node:test";
 
 interface ConversationChatProps {
-  threadId: string;
+  id: string;
+  idType: "thread" | "conversation";
 }
 
 interface Ichat {
   id: string;
   message: string;
   sender: "userInput" | "aiResponse";
+  thread?: string;
 }
 
 interface IcaseDetails {
   banch?: string;
   case_number: string;
   case_id: string;
+  result_id?: string;
+  result_type?: string;
 }
 
-export default function ConversationChat({ threadId }: ConversationChatProps) {
+export default function ConversationChat({
+  id,
+  idType,
+}: ConversationChatProps) {
+  const route = useRouter();
   const isSidebarCollapsed = useSelector(
     (state: RootState) => state.frontendElements.sidebarCollapse
   );
@@ -39,14 +50,17 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
 
   const [userQuery, setUserQuery] = useState("");
   const [chatList, setChatList] = useState<Ichat[]>([]);
-  const [paramsCondition, setParamsCondition] = useState<boolean>(false);
-  const {
-    isLoading,
-    isError,
-    data: threadData,
-    error,
-    refetch: viewThread,
-  } = useViewThreadQuery({ id: threadId });
+
+  // const {
+  //   isLoading,
+  //   isError,
+  //   data: threadData,
+  //   error,
+  //   // refetch: viewThread,
+  // } = useViewThreadQuery({ id: id });
+
+  const { data: convoThreadData, refetch: viewConvoThread } =
+    useViewConvoThreadQuery({ id: id }, { skip: !!id && idType !== "thread" });
 
   const [
     createConversation,
@@ -60,52 +74,39 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
 
   const { data: conversationDataView, refetch: viewConversation } =
     useViewConversationQuery(
-      { id: threadData?.id.toString() },
-      {
-        skip: !threadData,
-      }
+      { id: id?.toString() },
+      { skip: !!id && idType !== "conversation" }
     );
 
-  useEffect(() => {
-    if (threadId) {
-      viewThread();
-      setParamsCondition(
-        Boolean(typeof window !== undefined ? window?.location?.search : "")
-      );
-    }
-  }, [threadId]);
+  // useEffect(() => {
+  //   if (false) {
+  //     setChatList([]);
+  //     viewConversation();
+  //   } else {
+  //     createConversation({
+  //       thread: threadData?.id.toString() || "",
+  //       user_input: threadData?.title || "",
+  //     });
+  //     const chat: Ichat[] = [];
+  //     chat.push({
+  //       id: threadData?.id.toString(),
+  //       message: threadData?.title,
+  //       sender: "userInput",
+  //     });
+  //     setChatList(chat);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    if (threadData) {
-      if (paramsCondition) {
-        setChatList([]);
-        viewConversation();
-      } else {
-        createConversation({
-          thread: threadData?.id.toString() || "",
-          user_input: threadData?.title || "",
-        });
-        const chat: Ichat[] = [];
-        chat.push({
-          id: threadData?.id.toString(),
-          message: threadData?.title,
-          sender: "userInput",
-        });
-        setChatList(chat);
-      }
-    }
-  }, [threadData]);
-
-  useEffect(() => {
-    if (isError && error) {
-      if (isFetchBaseQueryError(error) && error?.status === 401) {
-        const errorData = error.data as APIErrorData;
-        showErrorToast(errorData?.detail ?? APP_ERROR_MESSAGE);
-      } else {
-        showErrorToast(APP_ERROR_MESSAGE);
-      }
-    }
-  }, [isError, error, conversationIsError, conversationError]);
+  // useEffect(() => {
+  //   if (isError && error) {
+  //     if (isFetchBaseQueryError(error) && error?.status === 401) {
+  //       const errorData = error.data as APIErrorData;
+  //       showErrorToast(errorData?.detail ?? APP_ERROR_MESSAGE);
+  //     } else {
+  //       showErrorToast(APP_ERROR_MESSAGE);
+  //     }
+  //   }
+  // }, [isError, error, conversationIsError, conversationError]);
 
   useEffect(() => {
     if (conversationIsError && conversationError) {
@@ -128,16 +129,18 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
     }
     const userMessage: Ichat = {
       id: conversationData?.id?.toString(),
+      thread: conversationData?.thread?.toString(),
       message: conversationData?.user_input,
       sender: "userInput",
     };
 
     const aiMessage: Ichat = {
       id: conversationData?.id?.toString(),
+      thread: conversationData?.thread?.toString(),
       message:
         `${conversationData?.ai_response} ${
-          conversationData?.details?.length
-            ? `<hr /><div class="conversationDetail-list"><h4 class="fs-6">Source:</h4> <ol class="">${conversationData?.details?.map(
+          conversationData?.search_results?.length
+            ? `<hr /><div class="conversationDetail-list"><h4 class="fs-6">Source:</h4> <ol class="">${conversationData?.search_results?.map(
                 (detailItem: IcaseDetails, index: number) =>
                   `<li key="${index}"><span class="fw-bold">${detailItem?.case_id}</span><span>${detailItem?.case_number}</span></li>`
               )}</ol><div>`
@@ -149,25 +152,33 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
   }, [conversationData]);
 
   // view already created conversation
-
   useEffect(() => {
     if (conversationDataView) {
       // To Do set data in Set chat list
       setChatList([]);
       const userMessage: Ichat = {
         id: conversationDataView?.id?.toString(),
+        thread: conversationDataView?.thread?.toString(),
         message: conversationDataView?.user_input,
         sender: "userInput",
       };
 
       const aiMessage: Ichat = {
         id: conversationDataView?.id?.toString(),
+        thread: conversationDataView?.thread?.toString(),
         message:
           `${conversationDataView?.ai_response} ${
             conversationDataView?.details?.length
-              ? `<hr /><div class="conversationDetail-list"><h4 class="fs-6">Source:</h4> <ol class="">${conversationDataView?.details?.map(
+              ? `<hr /><div class="conversationDetail-list"><h4 class="fs-6">Details:</h4> <ol class="">${conversationDataView?.details?.map(
                   (detailItem: IcaseDetails, index: number) =>
                     `<li key="${index}"><span class="fw-bold">${detailItem?.case_id}</span><span>${detailItem?.case_number}</span></li>`
+                )}</ol><div>`
+              : ""
+          } ${
+            conversationDataView?.search_results?.length
+              ? `<hr /><div class="conversationDetail-list"><h4 class="fs-6">Source:</h4> <ol class="">${conversationDataView?.details?.map(
+                  (detailItem: IcaseDetails, index: number) =>
+                    `<li key="${index}"><span class="fw-bold">${detailItem?.result_id}</span><span>${detailItem?.result_type}</span></li>`
                 )}</ol><div>`
               : ""
           }` || "",
@@ -177,9 +188,58 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
     }
   }, [conversationDataView]);
 
+  // view thread connvo data
+  useEffect(() => {
+    if (convoThreadData) {
+      setChatList([]);
+      const updatedChatList = convoThreadData.map((dataItem: any) => {
+        // User message
+        const userMessage: Ichat = {
+          id: dataItem.id.toString(),
+          message: dataItem.user_input,
+          sender: "userInput",
+        };
+
+        // AI message with details if search results exist
+        const aiMessage: Ichat = {
+          id: dataItem.id.toString(),
+          message:
+            `${dataItem.ai_response} ${
+              dataItem.search_results?.length
+                ? `<hr /><div class="conversationDetail-list">
+                      <h4 class="fs-6">Source:</h4> 
+                      <ol class="">
+                        ${dataItem.search_results
+                          .map(
+                            (detailItem: IcaseDetails, index: number) =>
+                              `<li key="${index}">
+                                <span class="fw-bold">${detailItem.result_id}</span>
+                                <span>${detailItem.result_type}</span>
+                              </li>`
+                          )
+                          .join("")}
+                      </ol>
+                    </div>`
+                : ""
+            }` || "",
+          sender: "aiResponse",
+        };
+
+        return [userMessage, aiMessage];
+      });
+
+      // Flatten the chat list
+      setChatList(updatedChatList.flat());
+    }
+  }, [convoThreadData]);
+
+  const sendToConvo = (convoId: string) => {
+    route.push(`/conversation/${convoId}`);
+  };
+
   return (
     <>
-      {(isLoading || conversationIsLoading) && (
+      {conversationIsLoading && (
         <div className="backdrop">
           <Loader />
         </div>
@@ -188,26 +248,34 @@ export default function ConversationChat({ threadId }: ConversationChatProps) {
         <div className="chat-wrapper">
           <div className="chat-box">
             {/* chat bubbles will be gen here */}
-            {chatList.map((chat, index) => (
-              <div
-                key={index}
-                className={`chat-bubble ${
-                  chat?.sender === "userInput" ? "person1" : "person2"
-                }`}
-              >
-                {chat?.sender === "userInput" ? (
-                  chat.message
-                ) : chat.message ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: chat?.message,
-                    }}
-                  />
-                ) : (
-                  <></>
-                )}
-              </div>
-            ))}
+            {chatList?.map((chat, index) => {
+              const convoId = chat?.id;
+              return (
+                <div
+                  key={index}
+                  data-id={chat.id}
+                  data-thread={chat?.thread}
+                  onClick={() => {
+                    idType === "thread" && sendToConvo(convoId);
+                  }}
+                  className={`chat-bubble ${
+                    chat?.sender === "userInput" ? "person1" : "person2"
+                  }`}
+                >
+                  {chat?.sender === "userInput" ? (
+                    chat.message
+                  ) : chat.message ? (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: chat?.message,
+                      }}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              );
+            })}
           </div>
           <div
             className={`chat-input-wrapper ${isSidebarCollapsed ? "px-5" : ""}`}

@@ -2,34 +2,43 @@
 import { useEffect, useState } from "react";
 import "../styles/components/blankChat.scss";
 import { QUERY_SUGGESTIONS, SINGLE_SUGGESTION } from "./constants";
-import { useCreateThreadMutation } from "../apiService/services/conversationApi";
+import {
+  useCreateThreadMutation,
+  useCreateConversationMutation,
+} from "../apiService/services/conversationApi";
 import { isFetchBaseQueryError } from "../utils/apiErrorUtils";
 import { showErrorToast } from "../hooks/useNotify";
 import { APIErrorData } from "../models/commonApiModels";
 import { APP_ERROR_MESSAGE } from "../constants/appConstants";
 import { useRouter } from "next/navigation";
+import Loader from "../components/common/Loader";
 
 export default function BlankChat() {
   const deviceWidth = typeof window !== "undefined" ? window.innerWidth : 0;
   const router = useRouter();
   const [userQuery, setUserQuery] = useState("");
-  const [
-    createThread,
-    { data: createThreadData, isLoading, isError, error, status },
-  ] = useCreateThreadMutation();
+  const [createThread, { data: createThreadData, isLoading, isError, error }] =
+    useCreateThreadMutation();
 
-  console.log({ isLoading, isError, error, status }, createThreadData);
+  const [createConversation, { data: conversationData }] =
+    useCreateConversationMutation();
 
   useEffect(() => {
     if (createThreadData && userQuery) {
+      createConversation({
+        thread: createThreadData?.id.toString() || "",
+        user_input: createThreadData?.title || "",
+      });
       // To need to route on conversation page
-      router.push(`/conversation/${createThreadData?.slug}`);
-      // createConversation({
-      //   thread: createThreadData?.id.toString(),
-      //   user_input: userQuery,
-      // });
+      // router.push(`/thread/${createThreadData?.id}`);
     }
   }, [createThreadData]);
+
+  useEffect(() => {
+    if (conversationData) {
+      router.push(`/conversation/${conversationData.id}`);
+    }
+  }, [conversationData]);
 
   useEffect(() => {
     if (isError && error) {

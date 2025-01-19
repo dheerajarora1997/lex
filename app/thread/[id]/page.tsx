@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Sidebar from "../../components/common/sidebar";
-import ConversationChat from "../ConversationChat";
+import ConversationChat from "../../conversation/ConversationChat";
 
 interface PageProps {
   params: Promise<{ id: string }>; // Expecting params to be a Promise
@@ -27,10 +27,8 @@ const Page = async ({ params }: PageProps) => {
     <>
       <Sidebar />
       <div className="w-100">
-        <p className="text-center m-0" hidden>
-          The ID is: {id}
-        </p>
-        <ConversationChat id={id} idType="conversation" />
+        <p className="text-center m-0">The ID is: {id}</p>
+        <ConversationChat id={id} idType="thread" />
       </div>
     </>
   );

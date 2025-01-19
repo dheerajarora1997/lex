@@ -3,12 +3,12 @@ import { store } from "../store/store";
 
 export function ReduxProvider({
   children,
-  pageProps = {},
-}: {
+}: // pageProps = {},
+{
   children: React.ReactNode;
   pageProps?: object;
 }) {
   //   const { store } = wrapper.useWrappedStore({ pageProps });
-  console.log(pageProps);
+  // console.warn(pageProps);
   return <Provider store={store}>{children}</Provider>;
 }

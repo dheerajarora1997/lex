@@ -5,7 +5,6 @@ import Image from "next/image";
 import { title } from "process";
 
 const Sidebar = () => {
-  console.log(title);
   return (
     <div className={styles.sidebar}>
       <div className={styles.header}>

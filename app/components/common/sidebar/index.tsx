@@ -35,12 +35,14 @@ export default function Sidebar() {
   };
 
   const sendToThread = (id: string) => {
-    router.push(`/conversation/${id}?newSearch=false`);
+    id === "new"
+      ? router.push(`/conversation/new`)
+      : router.push(`/thread/${id}`);
+    // router.push(`/conversation/${id}`);
   };
 
   const pathname = usePathname();
   const threadId = pathname.split("/")[2];
-  console.log(threadId);
 
   const { data } = useThreadsQuery({});
   const { data: staredThreadsData } = useStarredThreadsQuery({});
@@ -52,8 +54,6 @@ export default function Sidebar() {
       dispatch(setFrontendElement(true));
     }
   }, []);
-
-  console.log(data, "sidebar", staredThreadsData);
 
   return (
     <aside
@@ -101,7 +101,7 @@ export default function Sidebar() {
                 data-slug={item?.slug}
                 data-id={item?.id}
                 onClick={() => {
-                  sendToThread(item?.slug);
+                  sendToThread(item?.id.toString());
                 }}
               >
                 <span>{item?.title}</span>
