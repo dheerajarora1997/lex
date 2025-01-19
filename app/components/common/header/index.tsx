@@ -62,15 +62,13 @@ function Header() {
           </Link>
         ) : (
           <>
-            {typeof window !== undefined &&
-            window.location.pathname === "/auth/login" ? (
+            {pathname === "/auth/login" ? (
               <Link href="/auth/signup">
                 <button className="btn btn-primary text-white fw-bold">
                   Sign up
                 </button>
               </Link>
-            ) : typeof window !== undefined &&
-              window.location.pathname === "/auth/signup" ? (
+            ) : pathname === "/auth/signup" ? (
               <Link href="/auth/login">
                 <button className="btn btn-primary text-white fw-bold">
                   Login
