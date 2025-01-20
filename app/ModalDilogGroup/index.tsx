@@ -1,8 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import "./modalOverwrite.scss";
+import { useAppSelector } from "../store/store";
+import { setModalData } from "../store/slices/frontendElements";
+import { useDispatch } from "react-redux";
 
 export default function ModalDilogGroup() {
+  const modalData = useAppSelector(
+    (state) => state?.frontendElements?.modalData
+  );
+  const dispatch = useDispatch();
   const [iframeOpen, setIframeOpen] = useState(false);
   const slideRightElement = () => {
     const modalRightElement = document.querySelector(".modal-right-element");
@@ -44,7 +51,9 @@ export default function ModalDilogGroup() {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Sources</h5>
+              <h5 className="modal-title">
+                {modalData?.caseTitle || "Source"}
+              </h5>
               <button
                 type="button"
                 className="btn-close"
@@ -52,44 +61,32 @@ export default function ModalDilogGroup() {
                 aria-label="Close"
                 onClick={() => {
                   setIframeOpen(false);
+                  dispatch(setModalData(null));
                 }}
               ></button>
             </div>
             <div className="modal-body d-flex p-0">
               <div className="modal-left-element p-3">
-                <p>
-                  Accessibility tip: Using color to add meaning only provides a
-                  visual indication, which will not be conveyed to users of
-                  assistive technologies like screen readers. Please ensure the
-                  meaning is obvious from the content itself (e.g., the visible
-                  text with a sufficient color contrast) or is included through
-                  alternative means, such as additional text hidden with the
-                  .visually-hidden class. Accessibility tip: Using color to add
-                  meaning only provides a visual indication, which will not be
-                  conveyed to users of assistive technologies like screen
-                  readers. Please ensure the meaning is obvious from the content
-                  itself (e.g., the visible text with a sufficient color
-                  contrast) or is included through alternative means, such as
-                  additional text hidden with the .visually-hidden class.
-                  Accessibility tip: Using color to add meaning only provides a
-                  visual indication, which will not be conveyed to users of
-                  assistive technologies like screen readers. Please ensure the
-                  meaning is obvious from the content itself (e.g., the visible
-                  text with a sufficient color contrast) or is included through
-                  alternative means, such as additional text hidden with the
-                  .visually-hidden class.
-                </p>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => {
-                    setIframeOpen(!iframeOpen);
-                  }}
-                >
-                  View Judgement
-                </button>
+                {modalData?.caseContent || "Case Details Missing!"}
+                {modalData?.caseFile && (
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => {
+                      setIframeOpen(!iframeOpen);
+                    }}
+                  >
+                    View Judgement
+                  </button>
+                )}
               </div>
               <div className="modal-right-element d-none">
-                <iframe src="https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf"></iframe>
+                <iframe
+                  src={`${
+                    modalData?.caseFile
+                      ? modalData?.caseFile
+                      : "https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf"
+                  }`}
+                ></iframe>
               </div>
             </div>
           </div>

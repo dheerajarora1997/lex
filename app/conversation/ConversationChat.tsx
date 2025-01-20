@@ -11,10 +11,11 @@ import {
   useCreateConversationMutation,
   useViewConversationQuery,
 } from "../apiService/services/conversationApi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import Loader from "../components/common/Loader";
 import { useRouter } from "next/navigation";
+import { setModalData } from "../store/slices/frontendElements";
 
 interface ConversationChatProps {
   id: string;
@@ -26,6 +27,8 @@ interface Ichat {
   message: string;
   sender: "userInput" | "aiResponse";
   thread?: string;
+  search_results?: [];
+  details?: [];
 }
 
 interface IcaseDetails {
@@ -48,6 +51,7 @@ export default function ConversationChat({
   idType,
 }: ConversationChatProps) {
   const route = useRouter();
+  const dispatch = useDispatch();
   const isSidebarCollapsed = useSelector(
     (state: RootState) => state.frontendElements.sidebarCollapse
   );
@@ -64,8 +68,16 @@ export default function ConversationChat({
   //   // refetch: viewThread,
   // } = useViewThreadQuery({ id: id });
 
-  const { data: convoThreadData, refetch: viewConvoThread } =
-    useViewConvoThreadQuery({ id: id }, { skip: !!id && idType !== "thread" });
+  const {
+    data: convoThreadData,
+    error: convoThreadError,
+    isError: isConvoThreadError,
+    status: convoThreadStatus,
+    refetch: viewConvoThread,
+  } = useViewConvoThreadQuery(
+    { id: id },
+    { skip: !!id && idType !== "thread" }
+  );
 
   const [
     createConversation,
@@ -74,14 +86,20 @@ export default function ConversationChat({
       isLoading: conversationIsLoading,
       isError: conversationIsError,
       error: conversationError,
+      status: conversationStatus,
     },
   ] = useCreateConversationMutation();
 
-  const { data: conversationDataView, refetch: viewConversation } =
-    useViewConversationQuery(
-      { id: id?.toString() },
-      { skip: !!id && idType !== "conversation" }
-    );
+  const {
+    data: conversationDataView,
+    error,
+    isError,
+    status,
+    refetch: viewConversation,
+  } = useViewConversationQuery(
+    { id: id?.toString() },
+    { skip: !!id && idType !== "conversation" }
+  );
 
   useEffect(() => {
     if (id && idType === "thread") {
@@ -89,6 +107,7 @@ export default function ConversationChat({
     } else if (id && idType === "conversation") {
       viewConversation();
     }
+    dispatch(setModalData(null));
     if (false) {
       createConversation({});
     }
@@ -114,30 +133,40 @@ export default function ConversationChat({
     // }
   }, []);
 
-  // useEffect(() => {
-  //   if (isError && error) {
-  //     if (isFetchBaseQueryError(error) && error?.status === 401) {
-  //       const errorData = error.data as APIErrorData;
-  //       showErrorToast(errorData?.detail ?? APP_ERROR_MESSAGE);
-  //     } else {
-  //       showErrorToast(APP_ERROR_MESSAGE);
-  //     }
-  //   }
-  // }, [isError, error, conversationIsError, conversationError]);
-
   useEffect(() => {
-    if (conversationIsError && conversationError) {
-      if (
-        isFetchBaseQueryError(conversationError) &&
-        conversationError?.status === 401
-      ) {
-        const errorData = conversationError.data as APIErrorData;
+    if (
+      isError ||
+      error ||
+      conversationIsError ||
+      conversationError ||
+      convoThreadError ||
+      isConvoThreadError
+    ) {
+      if (isFetchBaseQueryError(error)) {
+        const errorData = error.data as APIErrorData;
         showErrorToast(errorData?.detail ?? APP_ERROR_MESSAGE);
       } else {
         showErrorToast(APP_ERROR_MESSAGE);
       }
     }
-  }, [conversationIsError, conversationError]);
+    if (
+      status === "rejected" ||
+      conversationStatus === "rejected" ||
+      convoThreadStatus === "rejected"
+    ) {
+      route.push("/auth/login");
+    }
+  }, [
+    isError,
+    error,
+    conversationIsError,
+    conversationError,
+    convoThreadError,
+    isConvoThreadError,
+    status,
+    conversationStatus,
+    convoThreadStatus,
+  ]);
 
   // First conversation Data
   useEffect(() => {
@@ -154,15 +183,9 @@ export default function ConversationChat({
     const aiMessage: Ichat = {
       id: conversationData?.id?.toString(),
       thread: conversationData?.thread?.toString(),
-      message:
-        `${conversationData?.ai_response} ${
-          conversationData?.search_results?.length
-            ? `<hr /><div class="conversationDetail-list"><h4 class="fs-6">Source:</h4> <ol class="">${conversationData?.search_results?.map(
-                (detailItem: IcaseDetails, index: number) =>
-                  `<li key="${index}"><span class="fw-bold">${detailItem?.case_id}</span><span>${detailItem?.case_number}</span></li>`
-              )}</ol><div>`
-            : ""
-        }` || "",
+      message: conversationData?.ai_response,
+      search_results: conversationData?.search_results,
+      details: conversationData?.details,
       sender: "aiResponse",
     };
     setChatList(() => [userMessage, aiMessage]);
@@ -172,6 +195,7 @@ export default function ConversationChat({
   useEffect(() => {
     if (conversationDataView) {
       // To Do set data in Set chat list
+      console.log(conversationDataView, "conversationDataView");
       setChatList([]);
       const userMessage: Ichat = {
         id: conversationDataView?.id?.toString(),
@@ -183,22 +207,9 @@ export default function ConversationChat({
       const aiMessage: Ichat = {
         id: conversationDataView?.id?.toString(),
         thread: conversationDataView?.thread?.toString(),
-        message:
-          `${conversationDataView?.ai_response} ${
-            conversationDataView?.details?.length
-              ? `<hr /><div class="conversationDetail-list"><h4 class="fs-6">Details:</h4> <ol class="">${conversationDataView?.details?.map(
-                  (detailItem: IcaseDetails, index: number) =>
-                    `<li key="${index}"><span class="fw-bold">${detailItem?.case_id}</span><span>${detailItem?.case_number}</span></li>`
-                )}</ol><div>`
-              : ""
-          } ${
-            conversationDataView?.search_results?.length
-              ? `<hr /><div class="conversationDetail-list"><h4 class="fs-6">Source:</h4> <ol class="">${conversationDataView?.details?.map(
-                  (detailItem: IcaseDetails, index: number) =>
-                    `<li key="${index}"><span class="fw-bold">${detailItem?.result_id}</span><span>${detailItem?.result_type}</span></li>`
-                )}</ol><div>`
-              : ""
-          }` || "",
+        message: conversationDataView?.ai_response,
+        search_results: conversationDataView?.search_results,
+        details: conversationDataView?.details,
         sender: "aiResponse",
       };
       setChatList(() => [userMessage, aiMessage]);
@@ -221,25 +232,7 @@ export default function ConversationChat({
           // AI message with details if search results exist
           const aiMessage: Ichat = {
             id: dataItem.id.toString(),
-            message:
-              `${dataItem.ai_response} ${
-                dataItem.search_results?.length
-                  ? `<hr /><div class="conversationDetail-list">
-                      <h4 class="fs-6">Source:</h4> 
-                      <ol class="">
-                        ${dataItem.search_results
-                          .map(
-                            (detailItem: IcaseDetails, index: number) =>
-                              `<li key="${index}">
-                                <span class="fw-bold">${detailItem.result_id}</span>
-                                <span>${detailItem.result_type}</span>
-                              </li>`
-                          )
-                          .join("")}
-                      </ol>
-                    </div>`
-                  : ""
-              }` || "",
+            message: dataItem.ai_response,
             sender: "aiResponse",
           };
 
@@ -286,14 +279,44 @@ export default function ConversationChat({
                   {chat?.sender === "userInput" ? (
                     chat.message
                   ) : chat.message ? (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: chat?.message,
-                      }}
-                    />
+                    <div dangerouslySetInnerHTML={{ __html: chat?.message }} />
                   ) : (
                     <></>
                   )}
+                  {chat?.search_results?.length ? (
+                    <>
+                      <hr />
+                      <div className="conversationDetail-list">
+                        <h4 className="fs-6">Source:</h4>
+                        <ol>
+                          {chat.search_results.map(
+                            (searchItem: IcaseDetails, index: number) => (
+                              <li
+                                key={index}
+                                data-option="two"
+                                data-bs-toggle="modal"
+                                data-bs-target="#firstModal"
+                                onClick={() =>
+                                  dispatch(
+                                    setModalData(
+                                      chat?.details?.length
+                                        ? conversationData?.details[index]
+                                        : null
+                                    )
+                                  )
+                                }
+                              >
+                                <span className="fw-bold">
+                                  {searchItem?.result_id}
+                                </span>
+                                <span>{searchItem?.result_type}</span>
+                              </li>
+                            )
+                          )}
+                        </ol>
+                      </div>
+                    </>
+                  ) : null}
                 </div>
               );
             })}

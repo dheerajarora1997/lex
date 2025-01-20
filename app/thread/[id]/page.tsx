@@ -27,7 +27,7 @@ const Page = async ({ params }: PageProps) => {
     <>
       <Sidebar />
       <div className="w-100">
-        <p className="text-center m-0">The ID is: {id}</p>
+        <p className="text-center m-0">Thread: {id}</p>
         <ConversationChat id={id} idType="thread" />
       </div>
     </>

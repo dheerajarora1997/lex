@@ -20,8 +20,10 @@ export default function BlankChat() {
   const [createThread, { data: createThreadData, isLoading, isError, error }] =
     useCreateThreadMutation();
 
-  const [createConversation, { data: conversationData }] =
-    useCreateConversationMutation();
+  const [
+    createConversation,
+    { data: conversationData, isLoading: conversationLoading },
+  ] = useCreateConversationMutation();
 
   useEffect(() => {
     if (createThreadData && userQuery) {
@@ -54,61 +56,69 @@ export default function BlankChat() {
   if (isLoading) return <Loader />;
 
   return (
-    <div className="container">
-      <div className={`blank-chat m-auto ${deviceWidth < 768 ? "ps-5" : ""}`}>
-        <div className="">
-          <h1 className="fs-4 text-center">AI-Powered Search Revolution!</h1>
-          <div className="form-group position-relative mb-4 col-sm-12 col-md-8 mx-auto">
-            <input
-              type="text"
-              className="form-control rounded-5 pe-5"
-              value={userQuery}
-              onChange={(e) => {
-                setUserQuery(e?.target?.value);
-              }}
-            />
-            <button
-              className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center"
-              onClick={() => {
-                if (userQuery) {
-                  createThread({ title: userQuery });
-                } else {
-                  alert("kindly add some text to search");
-                }
-              }}
-            >
-              🡒
-            </button>
+    <>
+      {isLoading ||
+        (conversationLoading && (
+          <div className="backdrop">
+            <Loader />
           </div>
-          <div className="text-start">
-            <h4 className="fs-6">Master the search game</h4>
-            <button
-              className="alert alert-light text-start w-100"
-              onClick={() => {
-                setUserQuery(SINGLE_SUGGESTION);
-              }}
-            >
-              {SINGLE_SUGGESTION}
-            </button>
-            <div className="row">
-              {QUERY_SUGGESTIONS?.map((suggestion: string, index: number) => {
-                return (
-                  <div key={index} className="col-sm-12 col-md-6">
-                    <button
-                      className="alert alert-light text-start w-100"
-                      onClick={() => {
-                        setUserQuery(suggestion);
-                      }}
-                    >
-                      {suggestion}
-                    </button>
-                  </div>
-                );
-              })}
+        ))}
+      <div className="container">
+        <div className={`blank-chat m-auto ${deviceWidth < 768 ? "ps-5" : ""}`}>
+          <div className="">
+            <h1 className="fs-4 text-center">AI-Powered Search Revolution!</h1>
+            <div className="form-group position-relative mb-4 col-sm-12 col-md-8 mx-auto">
+              <input
+                type="text"
+                className="form-control rounded-5 pe-5"
+                value={userQuery}
+                onChange={(e) => {
+                  setUserQuery(e?.target?.value);
+                }}
+              />
+              <button
+                className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center"
+                onClick={() => {
+                  if (userQuery) {
+                    createThread({ title: userQuery });
+                  } else {
+                    alert("kindly add some text to search");
+                  }
+                }}
+              >
+                🡒
+              </button>
+            </div>
+            <div className="text-start">
+              <h4 className="fs-6">Master the search game</h4>
+              <button
+                className="alert alert-light text-start w-100"
+                onClick={() => {
+                  setUserQuery(SINGLE_SUGGESTION);
+                }}
+              >
+                {SINGLE_SUGGESTION}
+              </button>
+              <div className="row">
+                {QUERY_SUGGESTIONS?.map((suggestion: string, index: number) => {
+                  return (
+                    <div key={index} className="col-sm-12 col-md-6">
+                      <button
+                        className="alert alert-light text-start w-100"
+                        onClick={() => {
+                          setUserQuery(suggestion);
+                        }}
+                      >
+                        {suggestion}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
