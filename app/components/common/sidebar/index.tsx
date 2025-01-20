@@ -6,7 +6,7 @@ import {
   useThreadsQuery,
 } from "@/app/apiService/services/conversationApi";
 import "./sidebar.scss";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { setFrontendElement } from "@/app/store/slices/frontendElements";
@@ -35,14 +35,13 @@ export default function Sidebar() {
   };
 
   const sendToThread = (id: string) => {
-    id === "new"
-      ? router.push(`/conversation/new`)
-      : router.push(`/thread/${id}`);
+    if (id === "new") {
+      router.push(`/conversation/new`);
+    } else {
+      router.push(`/thread/${id}`);
+    }
     // router.push(`/conversation/${id}`);
   };
-
-  const pathname = usePathname();
-  const threadId = pathname.split("/")[2];
 
   const { data } = useThreadsQuery({});
   const { data: staredThreadsData } = useStarredThreadsQuery({});
