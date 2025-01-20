@@ -51,6 +51,8 @@ export default function BlankChat() {
     }
   }, [isError, error]);
 
+  if (isLoading) return <Loader />;
+
   return (
     <div className="container">
       <div className={`blank-chat m-auto ${deviceWidth < 768 ? "ps-5" : ""}`}>

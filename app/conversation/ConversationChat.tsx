@@ -7,7 +7,6 @@ import { showErrorToast } from "../hooks/useNotify";
 import { APIErrorData } from "../models/commonApiModels";
 import { APP_ERROR_MESSAGE } from "../constants/appConstants";
 import {
-  useViewThreadQuery,
   useViewConvoThreadQuery,
   useCreateConversationMutation,
   useViewConversationQuery,
@@ -16,7 +15,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import Loader from "../components/common/Loader";
 import { useRouter } from "next/navigation";
-import { skip } from "node:test";
 
 interface ConversationChatProps {
   id: string;
@@ -36,6 +34,13 @@ interface IcaseDetails {
   case_id: string;
   result_id?: string;
   result_type?: string;
+}
+
+interface IConvoThreadData {
+  id: number;
+  user_input: string;
+  ai_response: string;
+  search_results?: IcaseDetails[];
 }
 
 export default function ConversationChat({
@@ -78,24 +83,30 @@ export default function ConversationChat({
       { skip: !!id && idType !== "conversation" }
     );
 
-  // useEffect(() => {
-  //   if (false) {
-  //     setChatList([]);
-  //     viewConversation();
-  //   } else {
-  //     createConversation({
-  //       thread: threadData?.id.toString() || "",
-  //       user_input: threadData?.title || "",
-  //     });
-  //     const chat: Ichat[] = [];
-  //     chat.push({
-  //       id: threadData?.id.toString(),
-  //       message: threadData?.title,
-  //       sender: "userInput",
-  //     });
-  //     setChatList(chat);
-  //   }
-  // }, []);
+  console.log(
+    viewConvoThread(),
+    createConversation({ thread: "1", user_input: "test" })
+  );
+
+  useEffect(() => {
+    if (false) {
+      setChatList([]);
+      viewConversation();
+    }
+    //  else {
+    //   createConversation({
+    //     thread: threadData?.id.toString() || "",
+    //     user_input: threadData?.title || "",
+    //   });
+    //   const chat: Ichat[] = [];
+    //   chat.push({
+    //     id: threadData?.id.toString(),
+    //     message: threadData?.title,
+    //     sender: "userInput",
+    //   });
+    //   setChatList(chat);
+    // }
+  }, []);
 
   // useEffect(() => {
   //   if (isError && error) {
@@ -192,21 +203,22 @@ export default function ConversationChat({
   useEffect(() => {
     if (convoThreadData) {
       setChatList([]);
-      const updatedChatList = convoThreadData.map((dataItem: any) => {
-        // User message
-        const userMessage: Ichat = {
-          id: dataItem.id.toString(),
-          message: dataItem.user_input,
-          sender: "userInput",
-        };
+      const updatedChatList = convoThreadData.map(
+        (dataItem: IConvoThreadData) => {
+          // User message
+          const userMessage: Ichat = {
+            id: dataItem.id.toString(),
+            message: dataItem.user_input,
+            sender: "userInput",
+          };
 
-        // AI message with details if search results exist
-        const aiMessage: Ichat = {
-          id: dataItem.id.toString(),
-          message:
-            `${dataItem.ai_response} ${
-              dataItem.search_results?.length
-                ? `<hr /><div class="conversationDetail-list">
+          // AI message with details if search results exist
+          const aiMessage: Ichat = {
+            id: dataItem.id.toString(),
+            message:
+              `${dataItem.ai_response} ${
+                dataItem.search_results?.length
+                  ? `<hr /><div class="conversationDetail-list">
                       <h4 class="fs-6">Source:</h4> 
                       <ol class="">
                         ${dataItem.search_results
@@ -220,13 +232,14 @@ export default function ConversationChat({
                           .join("")}
                       </ol>
                     </div>`
-                : ""
-            }` || "",
-          sender: "aiResponse",
-        };
+                  : ""
+              }` || "",
+            sender: "aiResponse",
+          };
 
-        return [userMessage, aiMessage];
-      });
+          return [userMessage, aiMessage];
+        }
+      );
 
       // Flatten the chat list
       setChatList(updatedChatList.flat());
@@ -256,7 +269,9 @@ export default function ConversationChat({
                   data-id={chat.id}
                   data-thread={chat?.thread}
                   onClick={() => {
-                    idType === "thread" && sendToConvo(convoId);
+                    if (idType === "thread") {
+                      sendToConvo(convoId);
+                    }
                   }}
                   className={`chat-bubble ${
                     chat?.sender === "userInput" ? "person1" : "person2"

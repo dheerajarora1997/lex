@@ -2,7 +2,6 @@
 import React from "react";
 import styles from "../styles/sidebar.module.scss";
 import Image from "next/image";
-import { title } from "process";
 
 const Sidebar = () => {
   return (
