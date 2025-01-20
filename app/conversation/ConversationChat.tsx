@@ -37,6 +37,7 @@ interface IcaseDetails {
   case_id: string;
   result_id?: string;
   result_type?: string;
+  case_content?: string;
 }
 
 interface IConvoThreadData {
@@ -299,9 +300,14 @@ export default function ConversationChat({
                                 onClick={() =>
                                   dispatch(
                                     setModalData(
-                                      chat?.details?.length
-                                        ? conversationData?.details[index]
-                                        : null
+                                      // chat?.details?.length ?
+                                      {
+                                        caseTitle: "Case Details",
+                                        caseContent: "Dynamic Content",
+                                        caseFile:
+                                          "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                                      }
+                                      // : null
                                     )
                                   )
                                 }
@@ -336,6 +342,10 @@ export default function ConversationChat({
                 <button
                   className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center"
                   onClick={() => {
+                    createConversation({
+                      thread: id,
+                      user_input: userQuery,
+                    });
                     console.log("btn click");
                     // dispatch(increment());
                   }}

@@ -67,7 +67,7 @@ export default function ModalDilogGroup() {
             </div>
             <div className="modal-body d-flex p-0">
               <div className="modal-left-element p-3">
-                {modalData?.caseContent || "Case Details Missing!"}
+                <p>{modalData?.caseContent || "Case Details Missing!"}</p>
                 {modalData?.caseFile && (
                   <button
                     className="btn btn-primary"
