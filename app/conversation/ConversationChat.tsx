@@ -83,10 +83,16 @@ export default function ConversationChat({
       { skip: !!id && idType !== "conversation" }
     );
 
-  console.log(
-    viewConvoThread(),
-    createConversation({ thread: "1", user_input: "test" })
-  );
+  useEffect(() => {
+    if (id && idType === "thread") {
+      viewConvoThread();
+    } else if (id && idType === "conversation") {
+      viewConversation();
+    }
+    if (false) {
+      createConversation({});
+    }
+  }, [id, idType]);
 
   useEffect(() => {
     if (false) {
