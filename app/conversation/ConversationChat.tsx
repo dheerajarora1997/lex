@@ -109,30 +109,7 @@ export default function ConversationChat({
       viewConversation();
     }
     dispatch(setModalData(null));
-    if (false) {
-      createConversation({});
-    }
   }, [id, idType]);
-
-  useEffect(() => {
-    if (false) {
-      setChatList([]);
-      viewConversation();
-    }
-    //  else {
-    //   createConversation({
-    //     thread: threadData?.id.toString() || "",
-    //     user_input: threadData?.title || "",
-    //   });
-    //   const chat: Ichat[] = [];
-    //   chat.push({
-    //     id: threadData?.id.toString(),
-    //     message: threadData?.title,
-    //     sender: "userInput",
-    //   });
-    //   setChatList(chat);
-    // }
-  }, []);
 
   useEffect(() => {
     if (
@@ -172,7 +149,7 @@ export default function ConversationChat({
   // First conversation Data
   useEffect(() => {
     if (conversationData) {
-      setChatList([]);
+      // setChatList([]);
     }
     const userMessage: Ichat = {
       id: conversationData?.id?.toString(),
@@ -189,14 +166,21 @@ export default function ConversationChat({
       details: conversationData?.details,
       sender: "aiResponse",
     };
-    setChatList(() => [userMessage, aiMessage]);
+    setChatList((prev) => [...prev, userMessage, aiMessage]);
+    setTimeout(() => {
+      const chatWrapper = document.querySelector(
+        ".chat-container .chat-wrapper"
+      );
+      if (chatWrapper) {
+        chatWrapper.scrollTop = chatWrapper.scrollHeight;
+      }
+    }, 1000);
   }, [conversationData]);
 
   // view already created conversation
   useEffect(() => {
     if (conversationDataView) {
       // To Do set data in Set chat list
-      console.log(conversationDataView, "conversationDataView");
       setChatList([]);
       const userMessage: Ichat = {
         id: conversationDataView?.id?.toString(),
@@ -258,7 +242,7 @@ export default function ConversationChat({
         </div>
       )}
       <div className={`chat-container ${deviceWidth < 768 ? "ps-5" : ""}`}>
-        <div className="chat-wrapper">
+        <div className="chat-wrapper pb-5">
           <div className="chat-box">
             {/* chat bubbles will be gen here */}
             {chatList?.map((chat, index) => {
@@ -346,7 +330,6 @@ export default function ConversationChat({
                       thread: id,
                       user_input: userQuery,
                     });
-                    console.log("btn click");
                     // dispatch(increment());
                   }}
                 >

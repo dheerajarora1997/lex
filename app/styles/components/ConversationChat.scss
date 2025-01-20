@@ -9,6 +9,10 @@
   max-height: calc(100vh - 180px);
   position: relative;
   width: 100%;
+  @media only screen and (max-width: 640px) {
+    max-height: calc(100vh - 220px);
+  }
+
   .chat-wrapper {
     overflow: hidden;
     overflow-y: auto;
