@@ -102,6 +102,10 @@ export default function ConversationChat({
     { skip: !!id && idType !== "conversation" }
   );
 
+  const chatWrapper =
+    typeof document !== undefined &&
+    document.querySelector(".chat-container .chat-wrapper");
+
   useEffect(() => {
     if (id && idType === "thread") {
       viewConvoThread();
@@ -168,9 +172,6 @@ export default function ConversationChat({
     };
     setChatList((prev) => [...prev, userMessage, aiMessage]);
     setTimeout(() => {
-      const chatWrapper = document.querySelector(
-        ".chat-container .chat-wrapper"
-      );
       if (chatWrapper) {
         chatWrapper.scrollTop = chatWrapper.scrollHeight;
       }
@@ -234,6 +235,11 @@ export default function ConversationChat({
     route.push(`/conversation/${convoId}`);
   };
 
+  const [threadId, setThreadId] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    console.log(chatList?.[0]?.thread, "chatList");
+    setThreadId(chatList?.[0]?.thread);
+  }, [chatList]);
   return (
     <>
       {conversationIsLoading && (
@@ -327,7 +333,7 @@ export default function ConversationChat({
                   className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center"
                   onClick={() => {
                     createConversation({
-                      thread: id,
+                      thread: idType === "thread" ? id : threadId,
                       user_input: userQuery,
                     });
                     // dispatch(increment());

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/app/hooks/useAuth";
 import TokenManager from "@/app/apiService/tokenManager";
+import { useRouter } from "next/navigation";
 
 // interface NavItem {
 //   label: string;
@@ -16,6 +17,7 @@ import TokenManager from "@/app/apiService/tokenManager";
 const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes (to refresh before token expires)
 
 function Header() {
+  const route = useRouter();
   const pathname = usePathname();
   const [rightHandCta, setRightHandCta] = useState({ href: "", name: "" });
 
@@ -44,6 +46,12 @@ function Header() {
       }
     }
   }, [pathname]);
+
+  useEffect(() => {
+    if (!TokenManager.validateAuth()) {
+      route.push("/auth/login");
+    }
+  }, []);
   return (
     <header className={styles.header}>
       <div className={styles.header_container}>
