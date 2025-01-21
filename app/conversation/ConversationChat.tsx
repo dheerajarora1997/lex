@@ -152,9 +152,6 @@ export default function ConversationChat({
 
   // First conversation Data
   useEffect(() => {
-    if (conversationData) {
-      // setChatList([]);
-    }
     const userMessage: Ichat = {
       id: conversationData?.id?.toString(),
       thread: conversationData?.thread?.toString(),
@@ -237,7 +234,6 @@ export default function ConversationChat({
 
   const [threadId, setThreadId] = useState<string | undefined>(undefined);
   useEffect(() => {
-    console.log(chatList?.[0]?.thread, "chatList");
     setThreadId(chatList?.[0]?.thread);
   }, [chatList]);
   return (
