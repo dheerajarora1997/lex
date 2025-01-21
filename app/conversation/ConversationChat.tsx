@@ -127,13 +127,13 @@ export default function ConversationChat({
         showErrorToast(APP_ERROR_MESSAGE);
       }
     }
-    if (
-      status === "rejected" ||
-      conversationStatus === "rejected" ||
-      convoThreadStatus === "rejected"
-    ) {
-      route.push("/auth/login");
-    }
+    // if (
+    //   status === "rejected" ||
+    //   conversationStatus === "rejected" ||
+    //   convoThreadStatus === "rejected"
+    // ) {
+    //   route.push("/auth/login");
+    // }
   }, [
     isError,
     error,
