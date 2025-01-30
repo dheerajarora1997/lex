@@ -2,6 +2,7 @@ import AppButton from "@/app/components/common/appButton";
 import styles from "../styles/onboarding.module.scss";
 import { ONBOARDING_CARD_DETAILS_LIST } from "../constants";
 import { useRouter } from "next/navigation";
+import { useOnboardingCompletedMutation } from "@/app/apiService/services/onboardedApi";
 
 function CardFooter({
   activeStepIndex,
@@ -11,6 +12,7 @@ function CardFooter({
   setActiveStepIndex: (value: number) => void;
 }) {
   const router = useRouter();
+  const [onboardingCompleted, {}] = useOnboardingCompletedMutation();
   return (
     <div className={styles.card_footer}>
       {activeStepIndex < ONBOARDING_CARD_DETAILS_LIST.length - 1 ? (
@@ -42,7 +44,13 @@ function CardFooter({
           }
           onClick={() => {
             if (activeStepIndex === ONBOARDING_CARD_DETAILS_LIST.length - 1) {
-              router.replace("/conversation/new");
+              onboardingCompleted({
+                data: {
+                  onboarded: true,
+                  onboarding_time: null,
+                },
+              });
+              router.push("/conversation/new");
             } else {
               setActiveStepIndex(activeStepIndex + 1);
             }

@@ -7,7 +7,9 @@ import { TypedUseSelectorHook } from "react-redux";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { conversationApi } from "../apiService/services/conversationApi";
+import { onboardedApi } from "../apiService/services/onboardedApi";
 import frontendElementReducer from "./slices/frontendElements";
+import onboardedReducer from "./slices/onboardedSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,13 +17,16 @@ export const store = configureStore({
     conversationData: conversationReducer,
     [authApi.reducerPath]: authApi.reducer,
     [conversationApi.reducerPath]: conversationApi.reducer,
+    [onboardedApi.reducerPath]: onboardedApi.reducer,
     frontendElements: frontendElementReducer,
+    onboarded: onboardedReducer,
   },
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(authApi.middleware)
-      .concat(conversationApi.middleware),
+      .concat(conversationApi.middleware)
+      .concat(onboardedApi.middleware),
 });
 
 // export type RootState = ReturnType<AppStore["getState"]>;

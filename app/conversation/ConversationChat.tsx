@@ -27,17 +27,18 @@ interface Ichat {
   message: string;
   sender: "userInput" | "aiResponse";
   thread?: string;
-  search_results?: [];
-  details?: [];
+  search_results?: IcaseDetails[];
+  details?: IcaseDetails[];
 }
 
-interface IcaseDetails {
+export interface IcaseDetails {
   banch?: string;
   case_number: string;
   case_id: string;
   result_id?: string;
   result_type?: string;
   case_content?: string;
+  is_cited?: boolean;
 }
 
 interface IConvoThreadData {
@@ -236,6 +237,13 @@ export default function ConversationChat({
   useEffect(() => {
     setThreadId(chatList?.[0]?.thread);
   }, [chatList]);
+
+  const formSubmit = () => {
+    createConversation({
+      thread: idType === "thread" ? id : threadId,
+      user_input: userQuery,
+    });
+  };
   return (
     <>
       {conversationIsLoading && (
@@ -276,34 +284,45 @@ export default function ConversationChat({
                       <div className="conversationDetail-list">
                         <h4 className="fs-6">Source:</h4>
                         <ol>
-                          {chat.search_results.map(
-                            (searchItem: IcaseDetails, index: number) => (
-                              <li
-                                key={index}
-                                data-option="two"
-                                data-bs-toggle="modal"
-                                data-bs-target="#firstModal"
-                                onClick={() =>
-                                  dispatch(
-                                    setModalData(
-                                      // chat?.details?.length ?
-                                      {
-                                        caseTitle: "Case Details",
-                                        caseContent: "Dynamic Content",
-                                        caseFile:
-                                          "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-                                      }
-                                      // : null
+                          {chat?.search_results?.map(
+                            (searchItem: IcaseDetails, index: number) => {
+                              if (!searchItem?.is_cited) return;
+                              return (
+                                <li
+                                  key={index}
+                                  data-option="two"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#firstModal"
+                                  onClick={() =>
+                                    dispatch(
+                                      setModalData(
+                                        // chat?.details?.length ?
+                                        {
+                                          caseTitle: "Case Details",
+                                          caseContent: chat.details?.[index],
+                                          caseFile:
+                                            "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                                        }
+                                        // : null
+                                      )
                                     )
-                                  )
-                                }
-                              >
-                                <span className="fw-bold">
-                                  {searchItem?.result_id}
-                                </span>
-                                <span>{searchItem?.result_type}</span>
-                              </li>
-                            )
+                                  }
+                                >
+                                  <span>{searchItem?.result_id}</span>
+                                  <div className="d-flex">
+                                    <span className="text-dark">
+                                      Case Number :
+                                    </span>
+                                    <span className="fw-bold">
+                                      {chat.details?.[index]?.case_number}
+                                    </span>
+                                  </div>
+                                  <span className="text-dark">
+                                    {searchItem?.result_type}
+                                  </span>
+                                </li>
+                              );
+                            }
                           )}
                         </ol>
                       </div>
@@ -318,25 +337,29 @@ export default function ConversationChat({
           >
             <div className="chat-input-container">
               <div className="form-group w-100 position-relative">
-                <input
-                  type="text"
-                  value={userQuery}
-                  onChange={(e) => setUserQuery(e.target.value)}
-                  placeholder="Type a message..."
-                  className="chat-input form-control rounded-5 pe-5"
-                />
-                <button
-                  className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center"
-                  onClick={() => {
-                    createConversation({
-                      thread: idType === "thread" ? id : threadId,
-                      user_input: userQuery,
-                    });
-                    // dispatch(increment());
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    formSubmit();
                   }}
                 >
-                  🡒
-                </button>
+                  <input
+                    type="text"
+                    value={userQuery}
+                    onChange={(e) => setUserQuery(e.target.value)}
+                    placeholder="Type a message..."
+                    className="chat-input form-control rounded-5 pe-5"
+                  />
+                  <button
+                    type="submit"
+                    className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center"
+                    // onClick={() => {
+                    //   formSubmit();
+                    // }}
+                  >
+                    🡒
+                  </button>
+                </form>
               </div>
             </div>
           </div>

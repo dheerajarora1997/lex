@@ -12,6 +12,10 @@ export interface LoginResponse {
     first_name: string;
     last_name: string;
     user_type: UserType;
+    metadata: {
+      onboarded: boolean;
+      onboarding_time: null | string;
+    };
   };
   tokens: {
     refresh: string;

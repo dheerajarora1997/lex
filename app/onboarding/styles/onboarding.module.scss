@@ -19,7 +19,7 @@
     border-radius: 16px;
     overflow: hidden;
     @media only screen and (min-width: 640px) {
-      width: 60%;
+      width: 90%;
     }
 
     .card_view {
@@ -45,7 +45,7 @@
 
       .start_cta {
         padding: 5px 40px !important;
-        @include font-properties(var(--font-primary), 20px, 500, 33px);
+        @include font-properties(var(--font-primary), 15px, 500, 33px);
       }
 
       &.active {
@@ -86,7 +86,7 @@
         justify-content: space-between;
 
         @media only screen and (min-width: 640px) {
-          padding: 25px;
+          padding: 15px;
         }
         .card_header {
           .details_container {
@@ -97,13 +97,13 @@
             gap: 10px;
             .title {
               width: 70%;
-              @include font-properties(var(--font-primary), 24px, 700, 34px);
+              @include font-properties(var(--font-primary), 24px, 700, 24px);
               text-align: center;
               margin-top: 10px;
             }
             .description {
               width: 70%;
-              @include font-properties(var(--font-primary), 20px, 400, 32px);
+              @include font-properties(var(--font-primary), 15px, 400, 24px);
               text-align: center;
               color: #4f4f4f;
             }
@@ -137,15 +137,15 @@
           .left {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 8px;
             flex: 1;
 
             .title {
-              @include font-properties(var(--font-primary), 20px, 700, 32px);
+              @include font-properties(var(--font-primary), 15px, 700, 24px);
             }
 
             .description {
-              @include font-properties(var(--font-primary), 20px, 400, 32px);
+              @include font-properties(var(--font-primary), 15px, 400, 24px);
               color: #4f4f4f;
             }
           }
@@ -166,7 +166,7 @@
 
           .cta {
             padding: 7px 24px;
-            @include font-properties(var(--font-primary), 20px, 500, 33px);
+            @include font-properties(var(--font-primary), 15px, 500, 33px);
           }
 
           .left_cta {

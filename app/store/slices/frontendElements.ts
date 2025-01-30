@@ -1,9 +1,10 @@
+import { IcaseDetails } from "@/app/conversation/ConversationChat";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface frontendElementState {
   sidebarCollapse: boolean;
   modalData?: {
-    caseContent: string;
+    caseContent?: IcaseDetails;
     caseTitle?: string;
     caseFile?: string;
   } | null;
@@ -23,7 +24,7 @@ const frontendElementSlice = createSlice({
     setModalData: (
       state,
       action: PayloadAction<{
-        caseContent: string;
+        caseContent?: IcaseDetails;
         caseTitle?: string;
         caseFile?: string;
       } | null>

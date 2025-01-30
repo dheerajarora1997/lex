@@ -34,7 +34,11 @@ function Login() {
   useEffect(() => {
     if (data && status === QueryStatus.fulfilled) {
       handleUserLogin();
-      router.push("/onboarding");
+      if (data?.user?.metadata?.onboarded) {
+        router.push("/conversation/new");
+      } else if (!data?.user?.metadata?.onboarded) {
+        router.push("/onboarding");
+      }
     }
   }, [data, status]);
 
