@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import "../styles/components/ConversationChat.scss";
 import { isFetchBaseQueryError } from "../utils/apiErrorUtils";
 import { showErrorToast } from "../hooks/useNotify";
@@ -15,7 +15,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import Loader from "../components/common/Loader";
 import { useRouter } from "next/navigation";
-import { setModalData } from "../store/slices/frontendElements";
+import {
+  setModalData,
+  setPageThreadId,
+  setConversationId,
+} from "../store/slices/frontendElements";
 
 interface ConversationChatProps {
   id: string;
@@ -45,6 +49,7 @@ interface IConvoThreadData {
   id: number;
   user_input: string;
   ai_response: string;
+  thread?: string;
   search_results?: IcaseDetails[];
 }
 
@@ -75,11 +80,9 @@ export default function ConversationChat({
     error: convoThreadError,
     isError: isConvoThreadError,
     status: convoThreadStatus,
+    isLoading: convoThreadIsLoading,
     refetch: viewConvoThread,
-  } = useViewConvoThreadQuery(
-    { id: id },
-    { skip: !!id && idType !== "thread" }
-  );
+  } = useViewConvoThreadQuery({ id: id }, { skip: !id || idType !== "thread" });
 
   const [
     createConversation,
@@ -97,6 +100,7 @@ export default function ConversationChat({
     error,
     isError,
     status,
+    isLoading,
     refetch: viewConversation,
   } = useViewConversationQuery(
     { id: id?.toString() },
@@ -211,6 +215,7 @@ export default function ConversationChat({
             id: dataItem.id.toString(),
             message: dataItem.user_input,
             sender: "userInput",
+            thread: dataItem?.thread?.toString(),
           };
 
           // AI message with details if search results exist
@@ -218,6 +223,7 @@ export default function ConversationChat({
             id: dataItem.id.toString(),
             message: dataItem.ai_response,
             sender: "aiResponse",
+            thread: dataItem?.thread?.toString(),
           };
 
           return [userMessage, aiMessage];
@@ -238,25 +244,32 @@ export default function ConversationChat({
     setThreadId(chatList?.[0]?.thread);
   }, [chatList]);
 
-  const formSubmit = () => {
+  const formSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     createConversation({
       thread: idType === "thread" ? id : threadId,
       user_input: userQuery,
     });
   };
+
+  // useEffect(() => {
+  //   if (idType === "conversation" && chatList?.length) {
+  //     dispatch(setPageThreadId(chatList?.[0]?.thread));
+  //     dispatch(setConversationId(chatList?.[0]?.id));
+  //   }
+  // }, [chatList]);
+
   return (
     <>
-      {conversationIsLoading && (
-        <div className="backdrop">
-          <Loader />
-        </div>
+      {(conversationIsLoading || convoThreadIsLoading || isLoading) && (
+        <Loader />
       )}
+
       <div className={`chat-container ${deviceWidth < 768 ? "ps-5" : ""}`}>
         <div className="chat-wrapper pb-5">
           <div className="chat-box">
             {/* chat bubbles will be gen here */}
             {chatList?.map((chat, index) => {
-              const convoId = chat?.id;
               return (
                 <div
                   key={index}
@@ -264,7 +277,11 @@ export default function ConversationChat({
                   data-thread={chat?.thread}
                   onClick={() => {
                     if (idType === "thread") {
-                      sendToConvo(convoId);
+                      dispatch(setPageThreadId(chat?.thread));
+                      dispatch(setConversationId(chat?.id));
+                      setTimeout(() => {
+                        sendToConvo(chat?.id);
+                      }, 1000);
                     }
                   }}
                   className={`chat-bubble ${
@@ -340,7 +357,7 @@ export default function ConversationChat({
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    formSubmit();
+                    formSubmit(e);
                   }}
                 >
                   <input
@@ -353,9 +370,6 @@ export default function ConversationChat({
                   <button
                     type="submit"
                     className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center"
-                    // onClick={() => {
-                    //   formSubmit();
-                    // }}
                   >
                     🡒
                   </button>

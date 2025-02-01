@@ -10,23 +10,29 @@ import { conversationApi } from "../apiService/services/conversationApi";
 import { onboardedApi } from "../apiService/services/onboardedApi";
 import frontendElementReducer from "./slices/frontendElements";
 import onboardedReducer from "./slices/onboardedSlice";
+import { profileApi } from "../apiService/services/profile";
+import { bookmarkApi } from "../apiService/services/bookMarkApi";
 
 export const store = configureStore({
   reducer: {
     authData: authDataReducer,
     conversationData: conversationReducer,
+    profileApi: profileApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [conversationApi.reducerPath]: conversationApi.reducer,
     [onboardedApi.reducerPath]: onboardedApi.reducer,
     frontendElements: frontendElementReducer,
     onboarded: onboardedReducer,
+    [bookmarkApi.reducerPath]: bookmarkApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(authApi.middleware)
       .concat(conversationApi.middleware)
-      .concat(onboardedApi.middleware),
+      .concat(onboardedApi.middleware)
+      .concat(profileApi.middleware)
+      .concat(bookmarkApi.middleware),
 });
 
 // export type RootState = ReturnType<AppStore["getState"]>;

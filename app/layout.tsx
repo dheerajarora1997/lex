@@ -24,7 +24,7 @@ export default function RootLayout({
         <ReduxProvider>
           <ToastContainer />
           <Header />
-          <main className="pt-3 d-flex">{children}</main>
+          <main className=" d-flex">{children}</main>
           <ModalDilogGroup />
           <script
             src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"

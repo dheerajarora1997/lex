@@ -44,8 +44,15 @@ export const conversationApi = createApi({
     starredThreads: builder.query({
       query: () =>
         queryConfiguration({
-          url: "/threads/starred",
+          url: "/search/starred",
           method: "GET",
+        }),
+    }),
+    bookMarkConversation: builder.mutation({
+      query: (id) =>
+        queryConfiguration({
+          url: `/search/${id}/star/`,
+          method: "PATCH",
         }),
     }),
 
@@ -59,7 +66,7 @@ export const conversationApi = createApi({
     }),
 
     deleteThread: builder.mutation({
-      query: ({ threadId }) =>
+      query: (threadId) =>
         queryConfiguration({
           url: `/threads/${threadId}/`,
           method: "DELETE",
@@ -103,4 +110,5 @@ export const {
   useCreateConversationMutation,
   useViewConversationQuery,
   useUpdateConversationMutation,
+  useBookMarkConversationMutation,
 } = conversationApi;

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import "../styles/components/blankChat.scss";
 import { QUERY_SUGGESTIONS, SINGLE_SUGGESTION } from "./constants";
 import {
@@ -53,46 +53,43 @@ export default function BlankChat() {
     }
   }, [isError, error]);
 
-  if (isLoading) return <Loader />;
+  const submitForm = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!conversationLoading || !isLoading) {
+      if (userQuery) {
+        createThread({ title: userQuery });
+      } else {
+        alert("kindly add some text to search");
+      }
+    }
+  };
 
   return (
     <>
-      {isLoading ||
-        (conversationLoading && (
-          <div className="backdrop">
-            <Loader />
-          </div>
-        ))}
+      {(conversationLoading || isLoading) && <Loader />}
       <div className="container">
         <div className={`blank-chat m-auto ${deviceWidth < 768 ? "ps-5" : ""}`}>
           <div className="">
             <h1 className="fs-4 text-center">AI-Powered Search Revolution!</h1>
             <div className="form-group position-relative mb-4 col-sm-12 col-md-8 mx-auto">
-              <input
-                type="text"
-                className="form-control rounded-5 pe-5"
-                value={userQuery}
-                onChange={(e) => {
-                  setUserQuery(e?.target?.value);
-                }}
-              />
-              <button
-                className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center"
-                onClick={() => {
-                  if (userQuery) {
-                    createThread({ title: userQuery });
-                  } else {
-                    alert("kindly add some text to search");
-                  }
-                }}
-              >
-                🡒
-              </button>
+              <form onSubmit={submitForm}>
+                <input
+                  type="text"
+                  className="form-control rounded-5 pe-5"
+                  value={userQuery}
+                  onChange={(e) => {
+                    setUserQuery(e?.target?.value);
+                  }}
+                />
+                <button className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center">
+                  🡒
+                </button>
+              </form>
             </div>
             <div className="text-start">
               <h4 className="fs-6">Master the search game</h4>
               <button
-                className="alert alert-light text-start w-100"
+                className="alert bg-primary bg-opacity-10 text-start w-100"
                 onClick={() => {
                   setUserQuery(SINGLE_SUGGESTION);
                 }}
@@ -104,7 +101,7 @@ export default function BlankChat() {
                   return (
                     <div key={index} className="col-sm-12 col-md-6">
                       <button
-                        className="alert alert-light text-start w-100"
+                        className="alert bg-primary bg-opacity-10 text-start w-100"
                         onClick={() => {
                           setUserQuery(suggestion);
                         }}

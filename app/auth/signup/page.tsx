@@ -46,7 +46,7 @@ function Signup() {
     if (error && isError) {
       if (isFetchBaseQueryError(error) && error?.status === 400) {
         const errorData = error.data as APIErrorData;
-        console.log(error);
+        console.error(error);
         showErrorToast(errorData?.error?.[0] ?? APP_ERROR_MESSAGE);
       } else {
         showErrorToast(APP_ERROR_MESSAGE);

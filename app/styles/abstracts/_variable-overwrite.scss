@@ -1,0 +1,14 @@
+@import "./variable";
+
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "dark": $dark,
+  "darken": $darken,
+  "danger": $danger,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "white": $white,
+  "transparent": $transparent,
+);

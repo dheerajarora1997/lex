@@ -17,6 +17,7 @@ function AuthFooter({
         onClick={onClickPrimaryButton}
         className={styles.auth_footer_primary_btn}
         isLoading={isPrimaryButtonLoading}
+        disabled={isPrimaryButtonLoading}
       />
     </div>
   );

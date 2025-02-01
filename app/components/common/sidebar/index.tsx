@@ -2,7 +2,6 @@
 
 import {
   useDeleteThreadMutation,
-  useStarredThreadsQuery,
   useThreadsQuery,
 } from "@/app/apiService/services/conversationApi";
 import "./sidebar.scss";
@@ -11,16 +10,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { setFrontendElement } from "@/app/store/slices/frontendElements";
 import { useEffect } from "react";
+import {
+  useStarredConversationsQuery,
+  useDeleteBookmarkConvoMutation,
+} from "@/app/apiService/services/bookMarkApi";
 
 interface IthreadItem {
-  id: number; // Unique identifier for the thread
-  title: string; // Title of the thread
-  slug: string; // URL-friendly identifier for the thread
-  description: string | null; // Description of the thread, can be null
-  is_shareable: boolean; // Indicates if the thread is shareable
-  is_starred: boolean; // Indicates if the thread is marked as starred
-  created_at: string; // Date and time when the thread was created (ISO 8601 format)
-  updated_at: string; // Date and time when the thread was last updated (ISO 8601 format)
+  id: number;
+  title: string;
+  slug: string;
+  description: string | null;
+  is_shareable: boolean;
+  is_starred: boolean;
+  created_at: string;
+  updated_at: string;
+  user_input?: string;
 }
 export default function Sidebar() {
   const router = useRouter();
@@ -43,10 +47,20 @@ export default function Sidebar() {
     // router.push(`/conversation/${id}`);
   };
 
+  const sendToConvo = (id: string) => {
+    if (id === "new") {
+      router.push(`/conversation/new`);
+    } else {
+      router.push(`/conversation/${id}`);
+    }
+    // router.push(`/conversation/${id}`);
+  };
+
   const { data } = useThreadsQuery({});
-  const { data: staredThreadsData } = useStarredThreadsQuery({});
+  const { data: StarredConversations } = useStarredConversationsQuery({});
 
   const [deleteThread] = useDeleteThreadMutation();
+  const [deleteBookmarkConvo] = useDeleteBookmarkConvoMutation();
 
   useEffect(() => {
     if (deviceWidth < 768) {
@@ -107,6 +121,7 @@ export default function Sidebar() {
                 <span className="search-result-icons">
                   <button
                     className="p-0 border-0 bg-transparent"
+                    data-id={item?.id}
                     onClick={() => {
                       deleteThread(item?.id.toString());
                     }}
@@ -122,7 +137,7 @@ export default function Sidebar() {
       <div className="saved-search">
         <h4 className="fs-6 fw-bold">Bookmark</h4>
         <div className="search-result">
-          {staredThreadsData?.results?.map(
+          {StarredConversations?.results?.map(
             (item: IthreadItem, index: number) => {
               if (index > 4) return null;
               return (
@@ -130,15 +145,16 @@ export default function Sidebar() {
                   className="search-result-item"
                   key={index}
                   onClick={() => {
-                    sendToThread(item?.slug);
+                    sendToConvo(item?.id?.toString());
                   }}
                 >
-                  <span>{item?.title}</span>
+                  <span>{item?.user_input}</span>
                   <span className="search-result-icons">
                     <button
                       className="p-0 border-0 bg-transparent"
+                      data-id={item?.id}
                       onClick={() => {
-                        deleteThread(item?.id.toString());
+                        deleteBookmarkConvo(item?.id.toString());
                       }}
                     >
                       🗑️

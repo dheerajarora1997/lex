@@ -8,6 +8,8 @@ interface frontendElementState {
     caseTitle?: string;
     caseFile?: string;
   } | null;
+  threadId?: string;
+  conversationId?: string;
 }
 
 const initialState: frontendElementState = {
@@ -15,7 +17,7 @@ const initialState: frontendElementState = {
 };
 
 const frontendElementSlice = createSlice({
-  name: "auth",
+  name: "frontendElement",
   initialState,
   reducers: {
     setFrontendElement: (state, action: PayloadAction<boolean>) => {
@@ -31,10 +33,20 @@ const frontendElementSlice = createSlice({
     ) => {
       state.modalData = action.payload;
     },
+    setPageThreadId(state, action: PayloadAction<string | undefined>) {
+      state.threadId = action.payload;
+    },
+    setConversationId(state, action: PayloadAction<string | undefined>) {
+      state.conversationId = action.payload;
+    },
   },
 });
 
-export const { setFrontendElement, setModalData } =
-  frontendElementSlice.actions;
+export const {
+  setFrontendElement,
+  setModalData,
+  setPageThreadId,
+  setConversationId,
+} = frontendElementSlice.actions;
 
 export default frontendElementSlice.reducer;

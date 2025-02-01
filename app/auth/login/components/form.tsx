@@ -45,7 +45,7 @@ function LoginForm({
       </form>
       <AuthFooter
         onClickPrimaryButton={() => {
-          if (validateForm()) {
+          if (validateForm() && !isLoading) {
             onClickLogin();
           }
         }}
