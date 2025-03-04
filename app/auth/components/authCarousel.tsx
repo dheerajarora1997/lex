@@ -30,7 +30,11 @@ function AuthCarousel() {
       >
         {AUTH_CAROUSEL_ITEMS.map((item, i) => (
           <SwiperSlide key={i}>
-            <AuthCarouselItem title={item.title} subtitle={item.subtitle} />
+            <AuthCarouselItem
+              title={item.title}
+              subtitle={item.subtitle}
+              imagePath={item?.imagePath}
+            />
           </SwiperSlide>
         ))}
       </Swiper>

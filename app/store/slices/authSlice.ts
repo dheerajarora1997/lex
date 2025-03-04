@@ -5,6 +5,7 @@ interface AuthState {
   phone_number: string | null;
   first_name: string;
   last_name: string;
+  verification_id?: string;
 }
 
 const initialState: AuthState = {
@@ -12,6 +13,7 @@ const initialState: AuthState = {
   phone_number: null,
   first_name: "",
   last_name: "",
+  verification_id: undefined,
 };
 
 const authSlice = createSlice({

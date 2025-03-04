@@ -14,9 +14,12 @@ import {
   useStarredConversationsQuery,
   useDeleteBookmarkConvoMutation,
 } from "@/app/apiService/services/bookMarkApi";
+import BookmarkedIcon from "@/app/assets/icons/BookmarkedIcon";
+// import ToggleIcon from "@/app/assets/icons/ToggleIcon";
 
 interface IthreadItem {
   id: number;
+  thread?: number;
   title: string;
   slug: string;
   description: string | null;
@@ -34,9 +37,9 @@ export default function Sidebar() {
   );
   const dispatch = useDispatch();
 
-  const toggleSidebar = () => {
-    dispatch(setFrontendElement(!isSidebarCollapsed));
-  };
+  // const toggleSidebar = () => {
+  //   dispatch(setFrontendElement(!isSidebarCollapsed));
+  // };
 
   const sendToThread = (id: string) => {
     if (id === "new") {
@@ -44,7 +47,6 @@ export default function Sidebar() {
     } else {
       router.push(`/thread/${id}`);
     }
-    // router.push(`/conversation/${id}`);
   };
 
   const sendToConvo = (id: string) => {
@@ -53,7 +55,6 @@ export default function Sidebar() {
     } else {
       router.push(`/conversation/${id}`);
     }
-    // router.push(`/conversation/${id}`);
   };
 
   const { data } = useThreadsQuery({});
@@ -76,9 +77,9 @@ export default function Sidebar() {
     >
       <div className="sidebar-btn-wrapper">
         <button
-          className={`btn bg-transparent d-flex justify-content-between border py-2 px-3 ${
-            deviceWidth > 768 ? "w-100" : ""
-          }`}
+          className={`btn bg-transparent d-flex justify-content-between border py-2 px-3 
+            ${deviceWidth > 768 ? "w-100" : "w-100"}
+          `}
           onClick={() => {
             sendToThread("new");
           }}
@@ -86,7 +87,7 @@ export default function Sidebar() {
           <span>New Research</span>
           <span className="fw-bold fs-5 lh-1">+</span>
         </button>
-        <button
+        {/* <button
           className={`btn bg-transparent toggle-navbar ${
             isSidebarCollapsed ? "_collapse" : "_expended"
           } ${deviceWidth > 768 ? "d-none" : ""}`}
@@ -95,11 +96,9 @@ export default function Sidebar() {
           }}
         >
           <span className="toggle-navbar-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-              <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" />
-            </svg>
+            <ToggleIcon />
           </span>
-        </button>
+        </button> */}
       </div>
       <div className="recent-search mt-3">
         <h4 className="fs-6 fw-bold">Past Search</h4>
@@ -113,17 +112,20 @@ export default function Sidebar() {
                 key={index}
                 data-slug={item?.slug}
                 data-id={item?.id}
-                onClick={() => {
-                  sendToThread(item?.id.toString());
-                }}
               >
-                <span>{item?.title}</span>
+                <span
+                  onClick={() => {
+                    sendToThread(item?.id.toString());
+                  }}
+                >
+                  {item?.title}
+                </span>
                 <span className="search-result-icons">
                   <button
                     className="p-0 border-0 bg-transparent"
                     data-id={item?.id}
                     onClick={() => {
-                      deleteThread(item?.id.toString());
+                      deleteThread(item?.slug);
                     }}
                   >
                     🗑️
@@ -134,7 +136,7 @@ export default function Sidebar() {
           })}
         </div>
       </div>
-      <div className="saved-search">
+      <div className="saved-search mt-3">
         <h4 className="fs-6 fw-bold">Bookmark</h4>
         <div className="search-result">
           {StarredConversations?.results?.map(
@@ -144,11 +146,16 @@ export default function Sidebar() {
                 <div
                   className="search-result-item"
                   key={index}
-                  onClick={() => {
-                    sendToConvo(item?.id?.toString());
-                  }}
+                  data-id={item?.id}
+                  data-thread={item?.thread}
                 >
-                  <span>{item?.user_input}</span>
+                  <span
+                    onClick={() => {
+                      sendToConvo(item?.id?.toString());
+                    }}
+                  >
+                    {item?.user_input}
+                  </span>
                   <span className="search-result-icons">
                     <button
                       className="p-0 border-0 bg-transparent"
@@ -157,7 +164,7 @@ export default function Sidebar() {
                         deleteBookmarkConvo(item?.id.toString());
                       }}
                     >
-                      🗑️
+                      <BookmarkedIcon />
                     </button>
                   </span>
                 </div>

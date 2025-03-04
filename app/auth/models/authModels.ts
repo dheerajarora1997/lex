@@ -9,11 +9,18 @@ export interface RefreshTokenResponse {
 
 export interface VerifyOtpRequest {
   email: string;
-  otp: number;
+  otp: string;
 }
 
 export interface ResendOtpRequest {
   email: string;
+}
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ForgotPasswordResponse {
+  verification_id: string;
 }
 
 export interface ResendOtpResponse {

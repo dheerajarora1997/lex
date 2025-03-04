@@ -6,6 +6,7 @@ interface CustomButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   rightIcon?: React.ReactNode;
   leftIcon?: React.ReactNode;
   isLoading?: boolean;
+  disabled?: boolean;
 }
 
 const AppButton: React.FC<CustomButtonProps> = ({
@@ -14,6 +15,7 @@ const AppButton: React.FC<CustomButtonProps> = ({
   leftIcon,
   isLoading = false,
   className,
+  disabled,
   ...rest
 }) => {
   return (
@@ -21,6 +23,11 @@ const AppButton: React.FC<CustomButtonProps> = ({
       className={`${styles.app_button} ${className} ${
         isLoading ? styles.loading : ""
       }`}
+      style={{
+        opacity: isLoading || disabled ? 0.5 : 1,
+        cursor: isLoading || disabled ? "not-allowed" : "pointer",
+      }}
+      disabled={isLoading || disabled}
       {...rest}
     >
       {isLoading ? (

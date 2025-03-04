@@ -11,38 +11,53 @@ import {
   useCreateConversationMutation,
   useViewConversationQuery,
 } from "../apiService/services/conversationApi";
+
+import { useBookMarkConversationMutation } from "../apiService/services/bookMarkApi";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import Loader from "../components/common/Loader";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import {
-  setModalData,
-  setPageThreadId,
+  CaseData,
   setConversationId,
+  setModalData,
+  setModalDetailId,
+  setPageThreadId,
 } from "../store/slices/frontendElements";
+import CopyIcon from "../assets/icons/CopyIcon";
+import BookmarkIcon from "../assets/icons/BookmarkIcon";
+import BookmarkedIcon from "../assets/icons/BookmarkedIcon";
+import LikeIcon from "../assets/icons/LikeIcon";
+import DislikeIcon from "../assets/icons/DislikeIcon";
+import { showSuccessToast } from "@/app/hooks/useNotify";
+import RightArrow from "../assets/icons/RightArrow";
 
 interface ConversationChatProps {
   id: string;
   idType: "thread" | "conversation";
 }
 
-interface Ichat {
+export interface Ichat {
   id: string;
   message: string;
   sender: "userInput" | "aiResponse";
   thread?: string;
   search_results?: IcaseDetails[];
-  details?: IcaseDetails[];
+  is_starred?: boolean;
 }
 
 export interface IcaseDetails {
-  banch?: string;
   case_number: string;
+  case_name: string;
   case_id: string;
   result_id?: string;
   result_type?: string;
   case_content?: string;
   is_cited?: boolean;
+  details?: CaseData;
+  metadata?: {
+    case_name?: string;
+  };
 }
 
 interface IConvoThreadData {
@@ -51,13 +66,21 @@ interface IConvoThreadData {
   ai_response: string;
   thread?: string;
   search_results?: IcaseDetails[];
+  is_starred?: boolean;
+}
+
+interface FetchBaseQueryError {
+  data?: {
+    non_field_errors?: string[];
+    message?: string;
+  };
 }
 
 export default function ConversationChat({
   id,
   idType,
 }: ConversationChatProps) {
-  const route = useRouter();
+  // const route = useRouter();
   const dispatch = useDispatch();
   const isSidebarCollapsed = useSelector(
     (state: RootState) => state.frontendElements.sidebarCollapse
@@ -107,6 +130,19 @@ export default function ConversationChat({
     { skip: !!id && idType !== "conversation" }
   );
 
+  const [bookMarkConversation, { status: bookmarkStatus }] =
+    useBookMarkConversationMutation();
+
+  const bookmarkConvo = (id: string) => {
+    bookMarkConversation(id);
+  };
+
+  useEffect(() => {
+    if (bookmarkStatus === "fulfilled") {
+      showSuccessToast("Conversation Bookmarked");
+    }
+  }, [bookmarkStatus]);
+
   const chatWrapper =
     typeof document !== undefined &&
     document.querySelector(".chat-container .chat-wrapper");
@@ -130,7 +166,16 @@ export default function ConversationChat({
       isConvoThreadError
     ) {
       if (isFetchBaseQueryError(error)) {
-        const errorData = error.data as APIErrorData;
+        const errorData =
+          (error.data as APIErrorData) ||
+          (conversationError as APIErrorData) ||
+          (convoThreadError as APIErrorData);
+        const errorMessage =
+          (error as FetchBaseQueryError)?.data?.message ||
+          (conversationError as FetchBaseQueryError)?.data?.message ||
+          (convoThreadError as FetchBaseQueryError)?.data?.message ||
+          "An error occurred";
+        showErrorToast(errorMessage);
         showErrorToast(errorData?.detail ?? APP_ERROR_MESSAGE);
       } else {
         showErrorToast(APP_ERROR_MESSAGE);
@@ -169,7 +214,6 @@ export default function ConversationChat({
       thread: conversationData?.thread?.toString(),
       message: conversationData?.ai_response,
       search_results: conversationData?.search_results,
-      details: conversationData?.details,
       sender: "aiResponse",
     };
     setChatList((prev) => [...prev, userMessage, aiMessage]);
@@ -197,8 +241,8 @@ export default function ConversationChat({
         thread: conversationDataView?.thread?.toString(),
         message: conversationDataView?.ai_response,
         search_results: conversationDataView?.search_results,
-        details: conversationDataView?.details,
         sender: "aiResponse",
+        is_starred: conversationDataView?.is_starred,
       };
       setChatList(() => [userMessage, aiMessage]);
     }
@@ -224,6 +268,8 @@ export default function ConversationChat({
             message: dataItem.ai_response,
             sender: "aiResponse",
             thread: dataItem?.thread?.toString(),
+            search_results: dataItem?.search_results,
+            is_starred: dataItem?.is_starred,
           };
 
           return [userMessage, aiMessage];
@@ -235,29 +281,34 @@ export default function ConversationChat({
     }
   }, [convoThreadData]);
 
-  const sendToConvo = (convoId: string) => {
-    route.push(`/conversation/${convoId}`);
-  };
+  // const sendToConvo = (convoId: string) => {
+  //   route.push(`/conversation/${convoId}`);
+  // };
 
   const [threadId, setThreadId] = useState<string | undefined>(undefined);
   useEffect(() => {
     setThreadId(chatList?.[0]?.thread);
+    setUserQuery("");
   }, [chatList]);
 
   const formSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!userQuery) {
+      alert("Kindly add some text to search");
+      return;
+    }
     createConversation({
       thread: idType === "thread" ? id : threadId,
       user_input: userQuery,
     });
   };
 
-  // useEffect(() => {
-  //   if (idType === "conversation" && chatList?.length) {
-  //     dispatch(setPageThreadId(chatList?.[0]?.thread));
-  //     dispatch(setConversationId(chatList?.[0]?.id));
-  //   }
-  // }, [chatList]);
+  useEffect(() => {
+    if (idType === "conversation" && chatList?.length) {
+      dispatch(setPageThreadId(chatList?.[0]?.thread));
+      dispatch(setConversationId(chatList?.[0]?.id));
+    }
+  }, [chatList]);
 
   return (
     <>
@@ -265,29 +316,53 @@ export default function ConversationChat({
         <Loader />
       )}
 
-      <div className={`chat-container ${deviceWidth < 768 ? "ps-5" : ""}`}>
+      <div className={`chat-container ${deviceWidth < 768 ? "ps-0" : ""}`}>
         <div className="chat-wrapper pb-5">
           <div className="chat-box">
             {/* chat bubbles will be gen here */}
-            {chatList?.map((chat, index) => {
+            {chatList?.map((chat: Ichat, index: number) => {
               return (
                 <div
                   key={index}
                   data-id={chat.id}
                   data-thread={chat?.thread}
-                  onClick={() => {
-                    if (idType === "thread") {
-                      dispatch(setPageThreadId(chat?.thread));
-                      dispatch(setConversationId(chat?.id));
-                      setTimeout(() => {
-                        sendToConvo(chat?.id);
-                      }, 1000);
-                    }
-                  }}
                   className={`chat-bubble ${
                     chat?.sender === "userInput" ? "person1" : "person2"
                   }`}
                 >
+                  {chat?.sender !== "userInput" && (
+                    <div className="chat-bubble-actions">
+                      <button
+                        className="btn p-0"
+                        onClick={() => {
+                          bookmarkConvo(chat?.id);
+                        }}
+                        title="Bookmark"
+                      >
+                        {chat?.is_starred ? (
+                          <BookmarkedIcon />
+                        ) : (
+                          <BookmarkIcon />
+                        )}
+                      </button>
+                      <button
+                        className="btn p-0"
+                        onClick={() => {
+                          navigator.clipboard.writeText(chat?.message);
+                          showSuccessToast("Data copied to clipboard");
+                        }}
+                        title="Copy to  Clipboard"
+                      >
+                        <CopyIcon />
+                      </button>
+                      <button className="btn p-0 d-none">
+                        <LikeIcon />
+                      </button>
+                      <button className="btn p-0 d-none">
+                        <DislikeIcon />
+                      </button>
+                    </div>
+                  )}
                   {chat?.sender === "userInput" ? (
                     chat.message
                   ) : chat.message ? (
@@ -295,11 +370,14 @@ export default function ConversationChat({
                   ) : (
                     <></>
                   )}
-                  {chat?.search_results?.length ? (
+                  {chat?.search_results?.length &&
+                  chat?.search_results?.some(
+                    (searchItem) => searchItem.is_cited
+                  ) ? (
                     <>
                       <hr />
                       <div className="conversationDetail-list">
-                        <h4 className="fs-6">Source:</h4>
+                        <h4 className="fs-6">Sources:</h4>
                         <ol>
                           {chat?.search_results?.map(
                             (searchItem: IcaseDetails, index: number) => {
@@ -310,33 +388,26 @@ export default function ConversationChat({
                                   data-option="two"
                                   data-bs-toggle="modal"
                                   data-bs-target="#firstModal"
-                                  onClick={() =>
-                                    dispatch(
-                                      setModalData(
-                                        // chat?.details?.length ?
-                                        {
-                                          caseTitle: "Case Details",
-                                          caseContent: chat.details?.[index],
-                                          caseFile:
-                                            "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-                                        }
-                                        // : null
-                                      )
-                                    )
-                                  }
+                                  onClick={() => {
+                                    if (idType === "conversation") {
+                                      dispatch(
+                                        setModalData(
+                                          chat?.search_results ?? null
+                                        )
+                                      );
+                                    } else {
+                                      dispatch(setModalDetailId(chat?.id));
+                                    }
+                                  }}
                                 >
-                                  <span>{searchItem?.result_id}</span>
-                                  <div className="d-flex">
+                                  <div className="d-flex flex-column">
                                     <span className="text-dark">
-                                      Case Number :
+                                      Case Name :
                                     </span>
                                     <span className="fw-bold">
-                                      {chat.details?.[index]?.case_number}
+                                      {searchItem?.metadata?.case_name}
                                     </span>
                                   </div>
-                                  <span className="text-dark">
-                                    {searchItem?.result_type}
-                                  </span>
                                 </li>
                               );
                             }
@@ -350,7 +421,7 @@ export default function ConversationChat({
             })}
           </div>
           <div
-            className={`chat-input-wrapper ${isSidebarCollapsed ? "px-5" : ""}`}
+            className={`chat-input-wrapper ${isSidebarCollapsed ? "ps-0" : ""}`}
           >
             <div className="chat-input-container">
               <div className="form-group w-100 position-relative">
@@ -365,13 +436,13 @@ export default function ConversationChat({
                     value={userQuery}
                     onChange={(e) => setUserQuery(e.target.value)}
                     placeholder="Type a message..."
-                    className="chat-input form-control rounded-5 pe-5"
+                    className="chat-input form-control rounded-5 pe-5 shadow ps-3"
                   />
                   <button
                     type="submit"
-                    className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center"
+                    className="search-btn icon-btn rounded-5 btn btn-secondary d-flex justify-content-center align-items-center bg-dark text-white p-1"
                   >
-                    🡒
+                    <RightArrow />
                   </button>
                 </form>
               </div>

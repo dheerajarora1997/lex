@@ -39,6 +39,8 @@ export const EmailInput: React.FC<TextInputProps> = ({
           value={value}
           onChange={handleChange}
           className={error ? styles.has_error : ""}
+          maxLength={100}
+          max={100}
         />
       </div>
 

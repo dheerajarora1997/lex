@@ -24,7 +24,7 @@ const MobileNumberField: React.FC<MobileNumberProps> = ({
 
   return (
     <div className={styles.form_field}>
-      <label>{"Mobile Number"}</label>
+      <label>{"Mobile Number*"}</label>
       <div className={styles.mobile_number_field}>
         <div className={styles.country_code}>
           <select defaultValue={countryCode}>
@@ -37,6 +37,8 @@ const MobileNumberField: React.FC<MobileNumberProps> = ({
             placeholder="XXX XXX XXXX"
             value={localPhoneNumber}
             onChange={handlePhoneNumberChange}
+            max={15}
+            maxLength={16}
           />
         </div>
       </div>

@@ -2,7 +2,6 @@ import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import styles from "./styles/formFields.module.scss";
 import { ValidationContext } from "@/app/providers/validationProvider";
 import { ValidationRule } from "./textInput";
-import Image from "next/image";
 
 interface PasswordInputProps {
   label: string;
@@ -53,6 +52,8 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
           value={value}
           onChange={handleChange}
           className={error ? styles.has_error : ""}
+          max={100}
+          maxLength={100}
         />
         <button
           type="button"
@@ -61,13 +62,16 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
           aria-label={showPassword ? "Hide password" : "Show password"}
         >
           {showPassword ? (
-            "👁️"
+            <img
+              src={"https://storage.googleapis.com/lex_assets/view.png"}
+              alt="eye"
+              width={24}
+              height={24}
+            />
           ) : (
-            <Image
-              src={
-                "https://storage.cloud.google.com/lex_assets/eye_hidden.png?authuser=1"
-              }
-              alt="eye hidden"
+            <img
+              src={"https://storage.googleapis.com/lex_assets/eye.png"}
+              alt="eye"
               width={24}
               height={24}
             />

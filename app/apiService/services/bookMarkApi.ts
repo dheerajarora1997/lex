@@ -34,10 +34,10 @@ export const bookmarkApi = createApi({
     }),
 
     deleteBookmarkConvo: builder.mutation({
-      query: ({ threadId }) =>
+      query: (convoID) =>
         queryConfiguration({
-          url: `/threads/${threadId}/`,
-          method: "DELETE",
+          url: `/search/${convoID}/star/`,
+          method: "PATCH",
         }),
       invalidatesTags: ["Conversation"],
     }),

@@ -14,9 +14,13 @@ import { showErrorToast } from "@/app/hooks/useNotify";
 import SignupForm from "./components/form";
 import { setAuthData } from "@/app/store/slices/authSlice";
 import { isFetchBaseQueryError } from "@/app/utils/apiErrorUtils";
-import { APIErrorData } from "@/app/models/commonApiModels";
 import { APP_ERROR_MESSAGE } from "@/app/constants/appConstants";
-
+interface FetchBaseQueryError {
+  data?: {
+    non_field_errors?: string[];
+    message?: string;
+  };
+}
 function Signup() {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState<RegistrationRequest>({
@@ -45,9 +49,9 @@ function Signup() {
   useEffect(() => {
     if (error && isError) {
       if (isFetchBaseQueryError(error) && error?.status === 400) {
-        const errorData = error.data as APIErrorData;
-        console.error(error);
-        showErrorToast(errorData?.error?.[0] ?? APP_ERROR_MESSAGE);
+        const errorMessage =
+          (error as FetchBaseQueryError)?.data?.message || "An error occurred";
+        showErrorToast(errorMessage);
       } else {
         showErrorToast(APP_ERROR_MESSAGE);
       }
@@ -60,6 +64,10 @@ function Signup() {
       router.push("/auth/verify-otp?signup=true");
     }
   }, [data, status]);
+
+  useEffect(() => {
+    dispatch(setAuthData({ name: "verification_id", value: "" }));
+  }, []);
 
   const onClickSignup = async () => {
     await register(formData);

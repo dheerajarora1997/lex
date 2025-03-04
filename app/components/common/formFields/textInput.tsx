@@ -46,6 +46,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             onChange={handleChange}
             className={error ? styles.has_error : ""}
             ref={ref}
+            max={100}
+            maxLength={100}
             {...inputProps}
           />
         </div>

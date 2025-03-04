@@ -5,11 +5,13 @@
   position: relative;
   overflow: hidden;
   overflow-y: auto;
-  min-height: calc(100vh - 110px);
+  min-height: calc(100vh - 100px);
   max-height: calc(100vh - 180px);
   position: relative;
   width: 100%;
+
   @media only screen and (max-width: 640px) {
+    min-height: calc(100vh - 110px);
     max-height: calc(100vh - 220px);
   }
 
@@ -24,21 +26,18 @@
       padding-bottom: 20px;
       max-width: 900px;
       margin: 0 auto;
+      @media only screen and (max-width: 768px) {
+        max-width: calc(100% - 20px);
+      }
       .chat-bubble {
-        padding: 10px 15px;
+        padding: 5px 15px;
         margin: 10px 20px;
         border-radius: 15px;
-        width: auto;
+        width: 100%;
         word-wrap: break-word;
-        min-height: auto;
+        min-height: 50px;
         height: auto;
         position: relative;
-        @media only screen and (max-width: 768px) {
-          max-width: 80%;
-        }
-        @media only screen and (min-width: 768px) {
-          max-width: 660px;
-        }
         p {
           margin: 0;
         }
@@ -61,38 +60,59 @@
           }
         }
         &.person1 {
-          background-color: rgba($dark, 0.03);
-          align-self: flex-end;
+          background-color: rgba($dark, 0.08);
+          border: rgba($dark, 0.1) 1px solid;
           margin-left: 10px;
+          width: 100%;
+          padding: 10px 16px 10px 40px;
+          font-size: 20px;
           font-weight: 600;
-          &:after {
+          text-transform: capitalize;
+          &:before {
             content: "";
             position: absolute;
-            background-color: rgba($dark, 0.03);
-            width: 40px;
-            height: 40px;
-            z-index: 1;
-            right: -55px;
-            top: 0;
-            border-radius: 100%;
+            left: 10px;
+            top: 15px;
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            background: url("https://storage.googleapis.com/lex_assets/send-plane.png")
+              no-repeat center;
+            background-size: 100%;
+            opacity: 0.9;
           }
         }
 
         &.person2 {
-          background-color: rgba($dark, 0.05);
           align-self: flex-start;
           margin-right: 10px;
+          padding-top: 50px;
+          padding-right: 30px;
           &:before {
-            content: "";
+            content: "Results";
             position: absolute;
-            background: rgba($dark, 0.05);
-            width: 40px;
-            height: 40px;
-            z-index: 1;
-            left: -55px;
-            top: 0;
-            border-radius: 100%;
+            left: -10px;
+            top: 15px;
+            display: inline-block;
+            width: 150px;
+            height: 22px;
+            color: #094db3;
+            font-weight: 600;
+            padding-left: 30px;
+            font-size: 18px;
+            background: url("https://storage.googleapis.com/lex_assets/Auto-awesome.png")
+              no-repeat left top;
+            background-size: 22px;
+            opacity: 0.9;
           }
+        }
+        .chat-bubble-actions {
+          position: absolute;
+          right: 30px;
+          top: 10px;
+          display: flex;
+          justify-content: flex-end;
+          gap: 10px;
         }
       }
       .conversationDetail-list {
@@ -152,57 +172,6 @@
           border-radius: 5px;
           font-size: 16px;
         }
-      }
-    }
-  }
-}
-
-.backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  .loader-text {
-    max-width: 70%;
-    padding: 20px;
-    color: $white;
-    font-size: 20px;
-    margin: 0 auto;
-    border-radius: 10px;
-    position: relative;
-    z-index: 99;
-    overflow: hidden;
-    font-weight: 500;
-    text-align: center;
-    &:before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      background: rgba($dark, 0.3);
-      backdrop-filter: saturate(180%) blur(20px);
-    }
-  }
-  p {
-    color: $white;
-  }
-  svg {
-    animation: rotate 2s linear infinite;
-    @keyframes rotate {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
       }
     }
   }

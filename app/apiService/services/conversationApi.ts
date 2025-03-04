@@ -71,6 +71,7 @@ export const conversationApi = createApi({
           url: `/threads/${threadId}/`,
           method: "DELETE",
         }),
+      invalidatesTags: ["threads"],
     }),
     createConversation: builder.mutation({
       query: (payload) =>
@@ -96,6 +97,13 @@ export const conversationApi = createApi({
           body: payload,
         }),
     }),
+    getJudmentFile: builder.query({
+      query: ({ id }: { id: string }) =>
+        queryConfiguration({
+          url: `/judgments/${id}/file/`,
+          method: "GET",
+        }),
+    }),
   }),
 });
 
@@ -111,4 +119,5 @@ export const {
   useViewConversationQuery,
   useUpdateConversationMutation,
   useBookMarkConversationMutation,
+  useGetJudmentFileQuery,
 } = conversationApi;

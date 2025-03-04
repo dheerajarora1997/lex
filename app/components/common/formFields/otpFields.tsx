@@ -22,14 +22,14 @@ const OtpInput: React.FC<OtpInputProps> = ({
   const inputRefs = useRef<HTMLInputElement[]>([]);
 
   useEffect(() => {
+    onComplete(otp);
     if (otp.length === length) {
-      onComplete(otp);
       setIsValid(true);
     } else if (otp.length > length) {
       setOtp(otp.slice(0, length));
       setIsValid(false);
     } else {
-      setIsValid(true);
+      setIsValid(false);
     }
   }, [otp, length, onComplete]);
 
@@ -51,11 +51,15 @@ const OtpInput: React.FC<OtpInputProps> = ({
 
   const onClickResendOtp = () => {
     setTimer(resendTimer);
+    setOtp("");
     if (onClickResend) {
       onClickResend();
     }
   };
 
+  const handleSingleOtpChange = (value: string) => {
+    setOtp(value);
+  };
   const handleOtpChange = (index: number, value: string) => {
     const newOtp = [...otp.split("")];
     newOtp[index] = value;
@@ -65,10 +69,24 @@ const OtpInput: React.FC<OtpInputProps> = ({
       inputRefs?.current?.[index + 1]?.focus();
     }
   };
-  console.log(isValid);
+  console.info(isValid);
   return (
     <div className={styles.form_field}>
-      <div className={styles.otp_input}>
+      <TextInput
+        name="otp_field"
+        placeholder="OTP"
+        value={otp || ""}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          handleSingleOtpChange(e.target.value)
+        }
+        // ref={(ref) => {
+        //   if (ref) {
+        //     inputRefs.current = ref;
+        //   }
+        // }}
+        maxLength={6}
+      ></TextInput>
+      <div className={styles.otp_input} style={{ display: "none" }}>
         {Array.from({ length }).map((_, index) => (
           <TextInput
             key={index}
@@ -91,7 +109,11 @@ const OtpInput: React.FC<OtpInputProps> = ({
         {timer ? (
           <span>Resend {timer} sec</span>
         ) : (
-          <button className={styles.resend_button} onClick={onClickResendOtp}>
+          <button
+            className={styles.resend_button}
+            onClick={onClickResendOtp}
+            type="button"
+          >
             Resend OTP
           </button>
         )}

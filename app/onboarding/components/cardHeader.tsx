@@ -4,14 +4,12 @@ function CardHeader() {
   return (
     <div className={styles.card_header}>
       <div className={styles.details_container}>
-        <span className={styles.title}>
-          Searching Cases: Old Way vs. New Way
-        </span>
-        <span className={styles.description}>
+        <span className={styles.title}>Searching The Lex Way</span>
+        {/* <span className={styles.description}>
           { 
             "You're probably used to searching cases using keywords. Here's how you can achieve the same results and more using Lex."
           }
-        </span>
+        </span> */}
       </div>
     </div>
   );

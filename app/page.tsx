@@ -13,7 +13,10 @@ export default function App() {
   useEffect(() => {
     if (accessToken && refreshToken) {
       route.push("/conversation/new");
-    } else {
+    } else if (
+      window.location !== undefined &&
+      !window.location.pathname.includes("auth")
+    ) {
       route.push("/auth/login");
     }
   }, []);

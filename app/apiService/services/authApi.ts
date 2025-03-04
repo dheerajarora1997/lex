@@ -6,6 +6,8 @@ import {
   RegistrationRequest,
 } from "@/app/auth/models/signupModels";
 import {
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
   RefreshTokenRequest,
   RefreshTokenResponse,
   ResendOtpRequest,
@@ -46,6 +48,27 @@ export const authApi = createApi({
         }),
     }),
 
+    changePassword: builder.mutation<LoginResponse, VerifyOtpRequest>({
+      query: (payload) =>
+        queryConfiguration({
+          url: "/change-password/",
+          method: "POST",
+          body: payload,
+        }),
+    }),
+
+    forgotPassword: builder.mutation<
+      ForgotPasswordResponse,
+      ForgotPasswordRequest
+    >({
+      query: (credentials) =>
+        queryConfiguration({
+          url: "/forgot-password/",
+          method: "POST",
+          body: credentials,
+        }),
+    }),
+
     resendOtp: builder.mutation<ResendOtpResponse, ResendOtpRequest>({
       query: (credentials) =>
         queryConfiguration({
@@ -80,6 +103,8 @@ export const {
   useRegisterMutation,
   useLogoutMutation,
   useResendOtpMutation,
+  useForgotPasswordMutation,
   useVerifyOtpMutation,
+  useChangePasswordMutation,
   useRefreshTokenMutation,
 } = authApi;

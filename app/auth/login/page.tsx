@@ -13,8 +13,14 @@ import { useRouter } from "next/navigation";
 import { showErrorToast } from "@/app/hooks/useNotify";
 import { APP_ERROR_MESSAGE } from "@/app/constants/appConstants";
 import { isFetchBaseQueryError } from "@/app/utils/apiErrorUtils";
-import { APIErrorData } from "@/app/models/commonApiModels";
 import LoginForm from "./components/form";
+
+interface FetchBaseQueryError {
+  data?: {
+    non_field_errors?: string[];
+    message?: string;
+  };
+}
 
 function Login() {
   const router = useRouter();
@@ -45,8 +51,9 @@ function Login() {
   useEffect(() => {
     if (isError && error) {
       if (isFetchBaseQueryError(error) && error?.status === 401) {
-        const errorData = error.data as APIErrorData;
-        showErrorToast(errorData?.detail ?? APP_ERROR_MESSAGE);
+        const errorMessage =
+          (error as FetchBaseQueryError)?.data?.message || "An error occurred";
+        showErrorToast(errorMessage ?? APP_ERROR_MESSAGE);
       } else {
         showErrorToast(APP_ERROR_MESSAGE);
       }

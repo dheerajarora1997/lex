@@ -33,14 +33,14 @@ function SignupForm({
       <form>
         <div className={styles.flex_container}>
           <TextInput
-            label="First Name"
+            label="First Name*"
             name="first_name"
             placeholder="Enter First Name"
             value={formData?.first_name ?? ""}
             onChange={onChangeFormField}
           />
           <TextInput
-            label="Last Name"
+            label="Last Name*"
             name="last_name"
             placeholder="Enter Last Name"
             value={formData?.last_name ?? ""}
@@ -48,7 +48,7 @@ function SignupForm({
           />
         </div>
         <EmailInput
-          label="Email"
+          label="Email*"
           name="email"
           placeholder="Enter Email"
           value={formData?.email ?? ""}
@@ -66,7 +66,7 @@ function SignupForm({
           }}
         />
         <PasswordInput
-          label="Password"
+          label="Password*"
           name="password"
           placeholder="Enter Password"
           value={formData?.password ?? ""}
@@ -74,7 +74,7 @@ function SignupForm({
           rules={passwordInputRules}
         />
         <Dropdown
-          label="User Type"
+          label="Occupation*"
           name="user_type"
           options={USER_TYPE_OPTIONS}
           value={formData?.user_type ?? ""}
@@ -82,7 +82,16 @@ function SignupForm({
         />
       </form>
       <AuthFooter
+        btnText="Sign Up"
         isPrimaryButtonLoading={isLoading}
+        btnDisableState={
+          !formData?.first_name ||
+          !formData?.last_name ||
+          !formData?.email ||
+          !formData?.password ||
+          !formData?.phone ||
+          !formData?.user_type
+        }
         onClickPrimaryButton={() => {
           if (validateForm()) {
             onClickSignup();

@@ -6,11 +6,11 @@
   height: 100vh;
   overflow: hidden;
   .modal-dialog {
-    width: 500px;
     height: 100%;
     margin: 0;
     transform: translateX(100%);
     transition: transform 0.4s ease-in-out;
+    width: 100%;
   }
   .modal-content {
     height: 100%;
@@ -25,10 +25,27 @@
   .modal-left-element,
   .modal-right-element {
     width: 100%;
-    max-width: 525px;
     height: calc(100vh - 65px);
     overflow: hidden;
     overflow-y: auto;
+  }
+  .modal-right-element {
+    background: $dark;
+    background: url("https://storage.googleapis.com/lex_assets/loader.gif")
+      no-repeat center center $dark;
+    background-size: 100px;
+    button {
+      position: absolute;
+      border: none;
+      padding: 6px 20px;
+      top: 10px;
+      left: 10px;
+    }
+    @media only screen and (max-width: 768px) {
+      position: absolute;
+      width: calc(100% - 20px);
+      left: 10px;
+    }
     iframe {
       width: 100%;
       min-height: 100%;
@@ -54,7 +71,20 @@
       }
     }
   }
-  .modal-right-element {
-    background: $dark;
+  .accordion-item {
+    margin-bottom: 10px;
+    border: 1px solid #ebebeb;
+    border-radius: 8px;
+    box-shadow: 0 0 8px -1px rgba(0, 0, 0, 0.1);
+    .accordion-button {
+      border-radius: 8px;
+      display: inline-block;
+      padding-right: 30px;
+      &:after {
+        right: 10px;
+        top: 10px;
+        position: absolute;
+      }
+    }
   }
 }

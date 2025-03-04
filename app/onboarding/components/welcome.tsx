@@ -18,7 +18,7 @@ function Welcome({
         <span className={styles.header}>Welcome to Lex!</span>
         <span className={styles.description}>
           {
-            "Welcome to Lex! We're excited to help you transform your legal research. Here's a quick guide to get you started."
+            "We're excited for you to experience a new way of legal research: The Lex Way!"
           }
         </span>
       </div>

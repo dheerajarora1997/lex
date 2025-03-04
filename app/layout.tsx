@@ -7,6 +7,7 @@ import ModalDilogGroup from "./ModalDilogGroup";
 import "./styles/getBootstrap.scss";
 import "./styles/main.scss";
 import { ToastContainer } from "react-toastify";
+import Script from "next/script";
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",
@@ -20,6 +21,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Script
+        id="google-tag-manager"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': 
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-THQW2JSM');
+          `,
+        }}
+      />
+
       <body className="pt-5">
         <ReduxProvider>
           <ToastContainer />
@@ -27,14 +42,24 @@ export default function RootLayout({
           <main className=" d-flex">{children}</main>
           <ModalDilogGroup />
           <script
-            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            // src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"
             async
           ></script>
           <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+            // src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
             async
           ></script>
         </ReduxProvider>
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-THQW2JSM"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          ></iframe>
+        </noscript>
       </body>
     </html>
   );

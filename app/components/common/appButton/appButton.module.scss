@@ -11,7 +11,7 @@
   transition: background-color 0.3s ease, color 0.3s ease;
   color: #fff;
   background-color: $primary-color;
-  @include font-properties(var(--font-primary), 20px, 600, 32px);
+  @include font-properties(var(--font-primary), 14px, 500, 32px);
 
   .loader {
     width: 20px;

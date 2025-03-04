@@ -1,7 +1,7 @@
 @import "../../../styles/abstracts/variable";
 
 .sidebar {
-  height: calc(100vh - 65px);
+  height: calc(100vh - 50px);
   min-width: 220px;
   max-width: 240px;
   overflow: hidden;
@@ -110,7 +110,7 @@
     }
   }
   &._collapse {
-    transform: translateX(-176px);
+    transform: translateX(-220px);
     .recent-search,
     .saved-search {
       display: none;

@@ -2,7 +2,7 @@
 @import "../../../styles/mixins.scss";
 
 .header {
-  padding: 8px 20px;
+  padding: 8px;
   box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.025);
   position: fixed;
   width: 100%;
@@ -24,9 +24,7 @@
 }
 
 .login_button {
-  @include font-properties(var(--font-secondary), 20px, 700, 33px);
-  text-decoration: none !important;
-  padding: 7px 24px;
-  gap: 8px;
+  @include font-properties(var(--font-secondary), 16px, 700, 33px);
+  padding: 5px 15px;
   text-decoration: none !important;
 }

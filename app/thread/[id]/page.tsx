@@ -26,8 +26,11 @@ const Page = async ({ params }: PageProps) => {
   return (
     <>
       <Sidebar />
-      <div className="w-100">
-        <div className="text-center m-0 mt-1 bg-body-tertiary p-2 border-bottom">
+      <div className="wrappper">
+        <div
+          className="text-center m-0 mt-1 bg-body-tertiary p-2 border-bottom"
+          style={{ visibility: "hidden" }}
+        >
           Thread : <strong>{id}</strong>
         </div>
         <ConversationChat id={id} idType="thread" />

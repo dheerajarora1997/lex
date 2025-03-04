@@ -5,7 +5,7 @@
   border-radius: 36px;
   overflow: hidden;
   height: 100%;
-  background-color: rgba(73, 57, 144, 1);
+  background: linear-gradient(98.95deg, #000000 37.88%, #353535 103.42%);
 
   :global(.swiper) {
     height: 95%;
@@ -19,12 +19,14 @@
 
     .top {
       color: #fff;
+      display: flex;
+      flex-direction: column;
 
       .title {
-        @include font-properties(var(--font-primary), 32px, 700, 44px);
+        @include font-properties(var(--font-primary), 20px, 700, 1.2);
       }
       .subtitle {
-        @include font-properties(var(--font-primary), 20px, 400, 28px);
+        @include font-properties(var(--font-primary), 16px, 400, 1.6);
       }
     }
   }

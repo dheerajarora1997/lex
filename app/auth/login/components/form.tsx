@@ -6,6 +6,7 @@ import styles from "../../styles/login.module.scss";
 import { LoginRequest } from "../../models/loginModels";
 import { ChangeEvent, useContext } from "react";
 import { ValidationContext } from "@/app/providers/validationProvider";
+import Link from "next/link";
 
 function LoginForm({
   formData,
@@ -40,10 +41,12 @@ function LoginForm({
           rules={passwordInputRules}
         />
         <div className={styles.forgot_pass_container}>
-          <a href="/auth/forgot-password">Forgot Password ?</a>
+          <Link href="/auth/forgot-password">Forgot Password ?</Link>
         </div>
       </form>
       <AuthFooter
+        btnText="Login"
+        btnDisableState={!formData?.email || !formData?.password}
         onClickPrimaryButton={() => {
           if (validateForm() && !isLoading) {
             onClickLogin();
