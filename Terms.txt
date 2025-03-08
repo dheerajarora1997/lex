@@ -1,0 +1,59 @@
+1. Acceptance of Terms
+By accessing and using TheLexBot (hereinafter referred to as "the Service"), you agree to be bound by these Terms and Conditions ("Terms"). If you do not agree with any part of these Terms, you must not use the Service.  
+2. Description of Service
+TheLexBot is an AI-powered legal research tool designed to assist lawyers, judges, corporate professionals, students, law professionals, and aspirants in India. The Service utilizes OpenAI's AI technology to analyze and process a proprietary dataset of Supreme Court of India rulings. This dataset is independently collected and maintained by Thelextbot. The information provided is for informational purposes only and does not constitute legal advice. While we aim to provide comprehensive coverage of Supreme Court rulings within our dataset, there may be limitations in the data coverage.
+3. Disclaimer of Legal Advice
+No Legal Advice: The information provided by TheLexBot, derived from our proprietary dataset of Supreme Court rulings, is not a substitute for professional legal advice. Users should consult with a qualified legal professional for advice tailored to their specific circumstances.
+Informational Purposes Only: The Service provides legal information and analysis based on our proprietary dataset of Supreme Court rulings, but it does not provide legal opinions or interpretations.
+User Responsibility: Users are solely responsible for their use of the information provided by TheLexBot.
+4. AI Limitations and Accuracy
+AI-Powered Analysis: The Service uses OpenAI's AI technology to analyze our proprietary dataset of Supreme Court rulings. While the AI is powerful, it may still generate inaccurate or incomplete information.
+Proprietary Dataset Limitations: While we strive to maintain an accurate and up-to-date dataset, it may not be exhaustive. There can be limitations to the amount of data that is within our dataset.
+Dynamic Legal Landscape: Legal information, including Supreme Court precedents, is subject to change, and our dataset may not always reflect the most current laws and regulations.
+No Guarantee of Accuracy: The Company does not guarantee the accuracy, completeness, or reliability of the information provided by TheLexBot, even regarding Supreme Court rulings within our dataset.
+Reliance at User's Risk: Users rely on the information provided by the Service, including analyses of Supreme Court rulings from our proprietary dataset, at their own risk.
+Supreme Court Ruling Data Limitations: While TheLexBot strives to provide comprehensive access to Supreme Court rulings, users acknowledge that the database may not contain all rulings, and there may be delays in the inclusion of recent rulings. Users should verify information with official sources.
+5. User Conduct
+Lawful Use: Users must use the Service for lawful purposes and in compliance with all applicable laws and regulations.
+Prohibited Activities: Users must not engage in any activity that could harm, disrupt, or interfere with the Service or other users. This includes, but is not limited to, hacking, spamming, and distributing malware.
+Respectful Interaction: Users must interact with the Service and other users in a respectful and professional manner.
+No data scraping or unauthorized use: Users are forbidden from data scraping or any other form of unauthorized use of the data provided by the service.
+6. Intellectual Property
+Ownership of Dataset: The Company retains all rights, title, and interest in its proprietary dataset of Supreme Court rulings, as well as the Service itself, including all intellectual property rights.
+OpenAI's AI Technology: Users acknowledge that the Service utilizes OpenAI's AI technology, and their terms and conditions related to the use of their AI technology apply. However, the data used is not from OpenAI.
+User Content: Users retain ownership of any content they submit to the Service, but grant the Company a non-exclusive, royalty-free license to use, reproduce, and distribute such content for the purpose of providing the Service.
+No Redistribution: Users are prohibited from redistributing or reselling the Service or any of its content, including the information derived from our proprietary dataset.
+7. Limitation of Liability
+No Liability for Damages: The Company shall not be liable for any direct, indirect, incidental, consequential, or punitive damages arising from the use or inability to use the Service.  
+Indemnification: Users agree to indemnify and hold harmless the Company, its officers, directors, employees, and agents from any claims, liabilities, damages, and expenses arising from their use of the Service or their violation of these Terms.  
+"As Is" Service: The Service is provided "as is" and "as available" without any warranties of any kind, whether express or implied.
+Maximum Liability: In any case, the maximum liability of the company will be the amount paid by the user for the service.
+8. Privacy Policy
+Data Collection: The Company collects and uses user data in accordance with its Privacy Policy, which is incorporated by reference into these Terms.
+Data Security: The Company takes reasonable measures to protect user data, but cannot guarantee its absolute security.
+OpenAI Data usage: Users acknowledge that their prompts are sent to openAI, and that openAI's data usage policies are also applicable.
+9. Modifications to Terms and Service
+Changes to Terms: The Company reserves the right to modify these Terms at any time. Users will be notified of any changes, and continued use of the Service constitutes acceptance of the revised Terms.  
+Service Updates: The Company may update or modify the Service at any time without notice.
+Service Termination: The Company reserves the right to terminate or suspend the Service at any time for any reason.
+10. Governing Law and Dispute Resolution
+Governing Law: These Terms shall be governed by and construed in accordance with the laws of India.  
+Jurisdiction: Any disputes arising from these Terms shall be subject to the exclusive jurisdiction of the courts in [Specify Jurisdiction, e.g., Delhi].  
+Arbitration: The company may choose to use arbitration as a form of dispute resolution.
+11. User Accounts and Security
+Account Responsibility: Users are responsible for maintaining the confidentiality of their account credentials.
+Unauthorized Access: Users must notify the Company immediately of any unauthorized access to their account.
+Account Termination: The Company reserves the right to terminate user accounts for violations of these Terms.
+12. Contact Information
+For any questions or concerns regarding these Terms, please contact us at:
+Mobile: +91-7982092862
+Email: support@thelextbot.com
+13. Severability
+If any provision of these Terms is held to be invalid or unenforceable, the remaining provisions shall continue in full force and effect.  
+14. Entire Agreement
+These Terms constitute the entire agreement between the user and the Company with respect to the Service.  
+Important Note:
+Legal Review: It is crucial to have these Terms reviewed by a legal professional in India to ensure they comply with all applicable laws and regulations.
+Privacy Policy: Ensure a comprehensive Privacy Policy is in place and linked to these Terms.
+OpenAI Terms: Link to OpenAI's terms of use and privacy policy.
+Regular Updates: Legal landscapes change, so review and update these terms regularly.
